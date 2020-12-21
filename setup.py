@@ -36,6 +36,9 @@ PROJECT_KEYWORDS = [
     'development'
 ]
 
+# Manually import the project
+PROJECT_MODULE = __import__(PROJECT_NAME)
+
 # Read me file is the long description
 with io.open(os.path.join(CWD, 'README.rst'), encoding='utf-8') as filep:
     LONG_DESCRIPTION = filep.read()
@@ -78,17 +81,17 @@ DATA_FILES = [
 
 SETUP_ARGS = dict(
     name='wslwinreg',
-    version='1.0',
+    version=PROJECT_MODULE.__version__,
 
     # Use the readme as the long description
-    description='Replacement for winreg for Cygwin, MSYS2 and WSL',
+    description=PROJECT_MODULE.__summary__,
     long_description=LONG_DESCRIPTION,
     # long_description_content_type='text/x-rst; charset=UTF-8',
-    license='MIT License',
-    url='http://wslwinreg.readthedocs.io',
+    license=PROJECT_MODULE.__license__,
+    url=PROJECT_MODULE.__uri__,
 
-    author='Rebecca Ann Heineman'.encode('utf8'),
-    author_email='becky@burgerbecky.com',
+    author=PROJECT_MODULE.__author__.encode('utf8'),
+    author_email=PROJECT_MODULE.__email__,
 
     keywords=PROJECT_KEYWORDS,
     platforms=['Any'],
@@ -106,7 +109,7 @@ SETUP_ARGS = dict(
 
 CLEAN_DIR_LIST = [
     PROJECT_NAME + '.egg-info',
-    PROJECT_NAME + '-' + '1.0',
+    PROJECT_NAME + '-' + PROJECT_MODULE.__version__,
     'dist',
     'build',
     'temp',

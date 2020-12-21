@@ -92,7 +92,7 @@ matrix:
 # Install python packages needed for this test and get versions for log
 install:
   - pip install .
-  - pip install tox-travis wheel codecov coverage pathlib2
+  - pip install tox-travis wheel codecov coverage pathlib2 burger
   - virtualenv --version
   - easy_install --version
   - pip --version

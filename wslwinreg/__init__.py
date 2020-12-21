@@ -86,7 +86,7 @@ if IS_CYGWIN or IS_MSYS:
         DeleteKey, DeleteKeyEx, DeleteValue, EnumKey, EnumValue, \
         ExpandEnvironmentStrings, FlushKey, LoadKey, OpenKey, OpenKeyEx, \
         QueryInfoKey, QueryValue, QueryValueEx, SaveKey, SetValue, SetValueEx, \
-        DisableReflectionKey, EnableReflectionKey,QueryReflectionKey
+        DisableReflectionKey, EnableReflectionKey, QueryReflectionKey
 elif IS_WSL:
     from .wslapi import *
 else:
@@ -94,4 +94,4 @@ else:
         DeleteKey, DeleteKeyEx, DeleteValue, EnumKey, EnumValue, \
         ExpandEnvironmentStrings, FlushKey, LoadKey, OpenKey, OpenKeyEx, \
         QueryInfoKey, QueryValue, QueryValueEx, SaveKey, SetValue, SetValueEx, \
-        DisableReflectionKey, EnableReflectionKey,QueryReflectionKey
+        DisableReflectionKey, EnableReflectionKey, QueryReflectionKey
