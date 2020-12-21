@@ -1,6 +1,31 @@
 Constants
 =========
 
+wslwinreg constants
+-------------------
+
+These values are set up on instantiation of the ``wslwinreg`` module.
+
+PY2
+^^^
+.. doxygenvariable:: wslwinreg::common::PY2
+
+IS_LINUX
+^^^^^^^^
+.. doxygenvariable:: wslwinreg::common::IS_LINUX
+
+IS_CYGWIN
+^^^^^^^^^
+.. doxygenvariable:: wslwinreg::common::IS_CYGWIN
+
+IS_MSYS
+^^^^^^^
+.. doxygenvariable:: wslwinreg::common::IS_MSYS
+
+IS_WSL
+^^^^^^
+.. doxygenvariable:: wslwinreg::common::IS_WSL
+
 Windows constants
 -----------------
 
@@ -253,3 +278,96 @@ FORMAT_MESSAGE_MAX_WIDTH_MASK
 LANG_NEUTRAL
 ^^^^^^^^^^^^
 .. doxygenvariable:: wslwinreg::common::LANG_NEUTRAL
+
+SUBLANG_DEFAULT
+^^^^^^^^^^^^^^^
+.. doxygenvariable:: wslwinreg::common::SUBLANG_DEFAULT
+
+Windows C++ data types
+----------------------
+
+These classes are used to describe the parameters to Windows functions.
+
+PCVOID
+^^^^^^
+.. doxygenvariable:: wslwinreg::common::PCVOID
+
+WORD
+^^^^
+.. doxygenvariable:: wslwinreg::common::WORD
+
+DWORD
+^^^^^
+.. doxygenvariable:: wslwinreg::common::DWORD
+
+PDWORD
+^^^^^^
+.. doxygenvariable:: wslwinreg::common::PDWORD
+
+LPDWORD
+^^^^^^^
+.. doxygenvariable:: wslwinreg::common::LPDWORD
+
+QWORD
+^^^^^
+.. doxygenvariable:: wslwinreg::common::QWORD
+
+PQWORD
+^^^^^^
+.. doxygenvariable:: wslwinreg::common::PQWORD
+
+LPQWORD
+^^^^^^^
+.. doxygenvariable:: wslwinreg::common::LPQWORD
+
+LONG
+^^^^
+.. doxygenvariable:: wslwinreg::common::LONG
+
+PLONG
+^^^^^
+.. doxygenvariable:: wslwinreg::common::PLONG
+
+PBYTE
+^^^^^
+.. doxygenvariable:: wslwinreg::common::PBYTE
+
+LPBYTE
+^^^^^^
+.. doxygenvariable:: wslwinreg::common::LPBYTE
+
+LPSTR
+^^^^^
+.. doxygenvariable:: wslwinreg::common::LPSTR
+
+LPWSTR
+^^^^^^
+.. doxygenvariable:: wslwinreg::common::LPWSTR
+
+LPCWSTR
+^^^^^^^
+.. doxygenvariable:: wslwinreg::common::LPCWSTR
+
+HANDLE
+^^^^^^
+.. doxygenvariable:: wslwinreg::common::HANDLE
+
+HKEY
+^^^^
+.. doxygenvariable:: wslwinreg::common::HKEY
+
+PHKEY
+^^^^^
+.. doxygenvariable:: wslwinreg::common::PHKEY
+
+HLOCAL
+^^^^^^
+.. doxygenvariable:: wslwinreg::common::HLOCAL
+
+REGSAM
+^^^^^^
+.. doxygenvariable:: wslwinreg::common::REGSAM
+
+PFILETIME
+^^^^^^^^^
+.. doxygenvariable:: wslwinreg::common::PFILETIME
