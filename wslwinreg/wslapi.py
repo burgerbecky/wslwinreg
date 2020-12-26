@@ -15,6 +15,7 @@ Package that implements winreg for Windows Subsystem for Linux
 # pylint: disable=redefined-builtin
 
 import os
+import stat
 import subprocess
 import socket
 import platform
@@ -87,6 +88,12 @@ if _EXESUFFIX in ('amd64', 'x86_64', 'em64t'):
 
 ## Patch to the executable to bridge
 _WIN_EXE = os.path.join(_WIN_DIR, 'backend-' + _EXESUFFIX + '.exe')
+
+# Make sure it's executable
+_STAT = os.stat(_WIN_EXE)
+if not _STAT.st_mode & stat.S_IEXEC:
+    os.chmod(_WIN_EXE, _STAT.st_mode | stat.S_IEXEC)
+del _STAT
 
 # Prepare a socket to be waiting for the exe once it is launched
 

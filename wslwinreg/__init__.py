@@ -52,7 +52,7 @@ from .common import IS_CYGWIN, IS_MSYS, IS_WSL, ERROR_SUCCESS, \
     PFILETIME, SUBLANG_DEFAULT
 
 ## Numeric version
-__numversion__ = (0, 5, 0)
+__numversion__ = (0, 9, 3)
 
 ## Current version of the library
 __version__ = '.'.join([str(num) for num in __numversion__])

@@ -33,7 +33,10 @@ PROJECT_KEYWORDS = [
     'msys2',
     'wsl',
     'winreg',
-    'development'
+    'development',
+    'windows',
+    'visual studio',
+    'vs'
 ]
 
 # Manually import the project
@@ -45,7 +48,8 @@ with io.open(os.path.join(CWD, 'README.rst'), encoding='utf-8') as filep:
 
 # Create the dependency list
 INSTALL_REQUIRES = [
-    'setuptools >= 0.7.0'
+    'setuptools >= 0.7.0',
+    'burger >= 1.1.36'
 ]
 
 # Project classifiers
@@ -102,7 +106,14 @@ SETUP_ARGS = dict(
     classifiers=CLASSIFIERS,
     packages=[PROJECT_NAME],
     include_package_data=True,
-    data_files=DATA_FILES
+    data_files=DATA_FILES,
+    package_data={
+        PROJECT_NAME: [
+            'bin/backend-arm.exe',
+            'bin/backend-arm64.exe',
+            'bin/backend-x64.exe',
+            'bin/backend-x86.exe']
+    }
 )
 
 ########################################
@@ -121,12 +132,14 @@ CLEAN_DIR_LIST = [
 CLEAN_DIR_RECURSE_LIST = [
     'temp',
     '__pycache__',
-    '_build'
+    '_build',
+    'bin'
 ]
 
 CLEAN_EXTENSION_LIST = [
     '*.pyc',
-    '*.pyo'
+    '*.pyo',
+    '*.user'
 ]
 
 

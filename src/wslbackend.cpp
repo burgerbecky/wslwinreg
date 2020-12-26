@@ -23,8 +23,6 @@
 #define ARRAYSIZE(a) (sizeof(a) / sizeof((a)[0]))
 #endif
 
-static FILE* fp = nullptr;
-
 // Get rid if annoying visual studio warnings
 
 // No pointer arithmetic
@@ -294,8 +292,8 @@ static char* winerror_to_string(LRESULT iResult, int* pOutputLength)
     if (len == 0) {
         // Out of memory?
         char buffer[256];
-        const int iLen =
-            sprintf_s(buffer, sizeof(buffer), "Windows Error 0x%x", static_cast<int>(iResult)) +
+        const int iLen = sprintf_s(buffer, sizeof(buffer), "Windows Error 0x%x",
+                             static_cast<int>(iResult)) +
             1;
         pOutput = static_cast<char*>(malloc(iLen));
         if (pOutput) {
@@ -1533,10 +1531,7 @@ int __cdecl main(int argc, char* argv[])
         SOCKET sendsocket = INVALID_SOCKET;
         iResult = ConnectLocalSocket(iPort, &sendsocket);
         if (iResult == ERROR_SUCCESS) {
-            if (!fopen_s(&fp, "foo.txt", "w")) {
-                ProcessCommands(sendsocket);
-                fclose(fp);
-            }
+            ProcessCommands(sendsocket);
             closesocket(sendsocket);
         }
         StopWinSock();
