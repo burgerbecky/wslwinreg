@@ -723,7 +723,10 @@ def from_registry_bytes(input_data, input_size, typ):
             input_size -= 1
 
         # Sanity check on buffer size
-        buf = input_data.raw
+        if hasattr(input_data, 'raw'):
+            buf = input_data.raw
+        else:
+            buf = input_data
         if len(buf) > input_size:
             buf = buf[:input_size]
 
@@ -743,7 +746,10 @@ def from_registry_bytes(input_data, input_size, typ):
             input_size -= 1
 
         # Sanity check on the buffer size
-        buf = input_data.raw
+        if hasattr(input_data, 'raw'):
+            buf = input_data.raw
+        else:
+            buf = input_data
         if len(buf) > input_size:
             buf = buf[:input_size]
 

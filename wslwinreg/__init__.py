@@ -88,7 +88,11 @@ if IS_CYGWIN or IS_MSYS:
         QueryInfoKey, QueryValue, QueryValueEx, SaveKey, SetValue, SetValueEx, \
         DisableReflectionKey, EnableReflectionKey, QueryReflectionKey
 elif IS_WSL:
-    from .wslapi import *
+    from .wslapi import CloseKey, ConnectRegistry, CreateKey, CreateKeyEx, \
+        DeleteKey, DeleteKeyEx, DeleteValue, EnumKey, EnumValue, \
+        ExpandEnvironmentStrings, FlushKey, LoadKey, OpenKey, OpenKeyEx, \
+        QueryInfoKey, QueryValue, QueryValueEx, SaveKey, SetValue, SetValueEx, \
+        DisableReflectionKey, EnableReflectionKey, QueryReflectionKey
 else:
     from .nullapi import CloseKey, ConnectRegistry, CreateKey, CreateKeyEx, \
         DeleteKey, DeleteKeyEx, DeleteValue, EnumKey, EnumValue, \
