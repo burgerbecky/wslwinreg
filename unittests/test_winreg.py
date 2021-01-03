@@ -60,7 +60,6 @@ test_reflect_key_name = "SOFTWARE\\Classes\\" + test_key_base
 
 test_data = [
     ("Int Value", 45, REG_DWORD),
-    ("Qword Value", 0x1122334455667788, REG_QWORD),
     ("String Val", "A string value", REG_SZ),
     ("StringExpand", "The path is %path%", REG_EXPAND_SZ),
     ("Multi-string", ["Lots", "of", "string", "values"], REG_MULTI_SZ),
@@ -72,6 +71,8 @@ test_data = [
     ("Japanese 日本", "日本語", REG_SZ),
 ]
 
+if sys.version_info >= (3, 6, 0)
+    test_data.append(("Qword Value", 0x1122334455667788, REG_QWORD))
 
 class BaseWinregTests(unittest.TestCase):
 
@@ -214,8 +215,8 @@ class BaseWinregTests(unittest.TestCase):
         self._delete_test_data(root_key, subkeystr)
 
     def _test_named_args(self, key, sub_key):
-        with CreateKeyEx(key=key, sub_key=sub_key, reserved=0,
-                         access=KEY_ALL_ACCESS) as ckey:
+        with CreateKeyEx(key, sub_key, 0,
+                         KEY_ALL_ACCESS) as ckey:
             self.assertTrue(ckey.handle != 0)
 
         with OpenKeyEx(key=key, sub_key=sub_key, reserved=0,
