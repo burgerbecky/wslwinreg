@@ -69,16 +69,18 @@ test_data = [
     ("String Val", "A string value", REG_SZ),
     ("StringExpand", "The path is %path%", REG_EXPAND_SZ),
     ("Multi-string", ["Lots", "of", "string", "values"], REG_MULTI_SZ),
-#    ("Multi-nul", ["", "", "", ""], REG_MULTI_SZ),
 #    ("Raw Data", b"binary\x00data", REG_BINARY),
-#    ("Big String", "x" * (2**14 - 1), REG_SZ),
-#    ("Big Binary", b"x" * (2**14), REG_BINARY),
-# Two and three kanjis, meaning: "Japan" and "Japanese")
-#    ("Japanese 日本", "日本語", REG_SZ),
+    ("Big String", "x" * (2**14 - 1), REG_SZ),
+    ("Big Binary", b"x" * (2**14), REG_BINARY),
+	# Two and three kanjis, meaning: "Japan" and "Japanese")
+	("Japanese 日本", "日本語", REG_SZ),
 ]
 
 if sys.version_info >= (3, 6, 0):
     test_data.append(("Qword Value", 0x1122334455667788, REG_QWORD))
+
+if sys.version_info >= (3, 7, 0):
+	test_data.append(("Multi-nul", ["", "", "", ""], REG_MULTI_SZ))
 
 class BaseWinregTests(unittest.TestCase):
 
