@@ -71,7 +71,7 @@ test_data = [
     ("Japanese 日本", "日本語", REG_SZ),
 ]
 
-if sys.version_info >= (3, 6, 0)
+if sys.version_info >= (3, 6, 0):
     test_data.append(("Qword Value", 0x1122334455667788, REG_QWORD))
 
 class BaseWinregTests(unittest.TestCase):
