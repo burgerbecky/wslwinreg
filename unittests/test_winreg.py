@@ -80,7 +80,7 @@ if sys.version_info >= (3, 6, 0):
 if sys.version_info >= (3, 7, 0):
     test_data.append(("Multi-nul", ["", "", "", ""], REG_MULTI_SZ))
     # Two and three kanjis, meaning: "Japan" and "Japanese")
-    test_data.append((("Japanese 日本", "日本語", REG_SZ))
+    test_data.append(("Japanese 日本", "日本語", REG_SZ))
 
 class BaseWinregTests(unittest.TestCase):
 
