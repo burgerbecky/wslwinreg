@@ -19,6 +19,10 @@ except ImportError:
     def win32_edition():
         return 'Not-Windows'
 
+# FileNotFoundError introduced in Python 3
+if sys.version_info[0] == 2:
+    FileNotFoundError = OSError
+
 # Use abspath() because msys2 only returns the module filename
 # instead of the full path
 
@@ -219,8 +223,8 @@ class BaseWinregTests(unittest.TestCase):
                          KEY_ALL_ACCESS) as ckey:
             self.assertTrue(ckey.handle != 0)
 
-        with OpenKeyEx(key=key, sub_key=sub_key, reserved=0,
-                       access=KEY_ALL_ACCESS) as okey:
+        with OpenKeyEx(key, sub_key, 0,
+                       KEY_ALL_ACCESS) as okey:
             self.assertTrue(okey.handle != 0)
 
 
@@ -266,7 +270,7 @@ class LocalWinregTests(BaseWinregTests):
         self.assertRaises(OSError, connect)
 
     def testExpandEnvironmentStrings(self):
-        r = ExpandEnvironmentStrings("%windir%\\test")
+        r = ExpandEnvironmentStrings(u"%windir%\\test")
         self.assertEqual(type(r), str)
         try:
             os.environ["windir"]
