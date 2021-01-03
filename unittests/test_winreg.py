@@ -66,8 +66,8 @@ test_reflect_key_name = "SOFTWARE\\Classes\\" + test_key_base
 
 test_data = [
     ("Int Value", 45, REG_DWORD),
-#    ("String Val", "A string value", REG_SZ),
-#    ("StringExpand", "The path is %path%", REG_EXPAND_SZ),
+    ("String Val", "A string value", REG_SZ),
+    ("StringExpand", "The path is %path%", REG_EXPAND_SZ),
 #    ("Multi-string", ["Lots", "of", "string", "values"], REG_MULTI_SZ),
 #    ("Multi-nul", ["", "", "", ""], REG_MULTI_SZ),
 #    ("Raw Data", b"binary\x00data", REG_BINARY),
