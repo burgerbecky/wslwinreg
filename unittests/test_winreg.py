@@ -73,7 +73,7 @@ test_data = [
     ("Big String", "x" * (2**14 - 1), REG_SZ),
     ("Big Binary", b"x" * (2**14), REG_BINARY),
 	# Two and three kanjis, meaning: "Japan" and "Japanese")
-	("Japanese 日本", "日本語", REG_SZ),
+#	("Japanese 日本", "日本語", REG_SZ),
 ]
 
 if sys.version_info >= (3, 6, 0):
