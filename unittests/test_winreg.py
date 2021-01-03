@@ -57,6 +57,9 @@ WIN64_MACHINE = True if machine() == "AMD64" or machine() == 'x86_64' else False
 # tests are only valid up until 6.1
 HAS_REFLECTION = True if WIN_VER < (6, 1) else False
 
+STRING_WITH_NULL_WORKS = True if sys.version_info >= (3, 6, 0) or \
+    sys.version_info[0] == 2 else False
+
 # Use a per-process key to prevent concurrent test runs (buildbot!) from
 # stomping on each other.
 test_key_base = "Python Test Key [%d] - Delete Me" % (os.getpid(),)
@@ -414,6 +417,7 @@ class LocalWinregTests(BaseWinregTests):
         finally:
             DeleteKey(HKEY_CURRENT_USER, test_key_name)
 
+    @unittest.skipUnless(STRING_WITH_NULL_WORKS, "Issue 25778 broken on this version")
     def test_read_string_containing_null(self):
         # Test for issue 25778: REG_SZ should not contain null characters
         try:
