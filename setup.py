@@ -48,7 +48,8 @@ with io.open(os.path.join(CWD, 'README.rst'), encoding='utf-8') as filep:
 
 # Create the dependency list
 INSTALL_REQUIRES = [
-    'setuptools >= 0.7.0',
+    'setuptools >= 17.1',
+    'enum34 >= 1.0.0',
     'burger >= 1.1.36'
 ]
 

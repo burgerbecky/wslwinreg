@@ -13,6 +13,7 @@ Package that implements winreg for Windows Subsystem for Linux
 # pylint: disable=unused-argument
 # pylint: disable=broad-except
 # pylint: disable=redefined-builtin
+# pylint: warning,raise-missing-from
 
 import os
 import stat
@@ -20,7 +21,7 @@ import subprocess
 import socket
 import platform
 import struct
-from enum import Enum
+from enum import IntEnum
 from .common import KEY_WRITE, KEY_WOW64_64KEY, KEY_READ, PY2, \
     winerror_to_errno, builtins, ERROR_FILE_NOT_FOUND, from_registry_bytes, \
     REG_SZ, to_registry_bytes
@@ -40,7 +41,7 @@ except NameError:
     # Fake it for Python 3
     basestring = str
 
-class Commands(Enum):
+class Commands(IntEnum):
     """
     Commands to send to the bridging executable.
     """
@@ -77,7 +78,7 @@ _LOCALHOST = '127.0.0.1'
 _BUFFER_SIZE = 1024
 
 ## Directory for the windows executables
-_WIN_DIR = os.path.join(os.path.dirname(__file__), 'bin')
+_WIN_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'bin')
 
 ## Set the exe suffix for the CPU in use
 _EXESUFFIX = machine = platform.machine().lower()
@@ -113,20 +114,20 @@ try:
         (_WIN_EXE, '-p', str(_LISTEN_PORT)),
         cwd=_WIN_DIR, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
         universal_newlines=True)
-except FileNotFoundError as exc:
+except OSError:
     raise ImportError("Windows executable {} for bridging not found.".format(
-        _WIN_EXE)) from exc
+        _WIN_EXE))
 
 # At thie point, the exe had started, connect to it.
 _LISTEN_SOCKET.settimeout(3.0)
 try:
     ## Connection socket
     _CONNECTION_SOCKET, _CONNECTION_ADDR = _LISTEN_SOCKET.accept()
-except socket.timeout as exc:
-    raise ImportError("Failure to connect with bridging executable") from exc
+except socket.timeout:
+    raise ImportError("Failure to connect with bridging executable")
 
 # Set the timeout
-_CONNECTION_SOCKET.settimeout(3.0)
+_CONNECTION_SOCKET.settimeout(5.0)
 
 if _CONNECTION_SOCKET.recv(_BUFFER_SIZE) != b"Bridge started 1.0":
     raise ImportError("Windows Bridge version mismatch")
