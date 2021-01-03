@@ -13,31 +13,19 @@ import threading
 from platform import machine
 from platform import platform as pplatform
 
-# Running on linux?
-IS_LINUX = sys.platform.startswith('linux')
-
-# Running on Cygwin
-IS_CYGWIN = sys.platform.startswith('cygwin')
-
-# Running on MSYS
-IS_MSYS = sys.platform.startswith('msys')
-
-# Running on Windows Subsystem for Linux
-IS_WSL = IS_LINUX and 'icrosoft' in pplatform()
-
 try:
     from platform import win32_edition
 except ImportError:
     def win32_edition():
         return 'Not-Windows'
 
-try:
-    from winreg import *
-except ModuleNotFoundError:
-    # Use abspath() because msys2 only returns the module filename
-    # instead of the full path
-    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from wslwinreg import *
+# Use abspath() because msys2 only returns the module filename
+# instead of the full path
+
+# Insert the location of wslwinreg at the begining so it's the first
+# to be processed
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from wslwinreg import *
 
 # Do this first so test will be skipped if module doesn't exist
 # support.import_module('winreg', required_on=['win'])

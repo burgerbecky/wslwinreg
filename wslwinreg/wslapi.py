@@ -210,6 +210,7 @@ def create_string_buffer(temp_string, is_binary=False):
 
     Args:
         temp_string: String to convert
+        is_binary: True if the input in binary, not a string.
     """
 
     # Ensure it's a string

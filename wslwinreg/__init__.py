@@ -16,6 +16,11 @@ Linux.
 #
 # \htmlinclude README.html
 #
+# Chapter list
+# ============
+#
+# - \subpage md_why_wslwinreg
+#
 # Module list
 # ===========
 #
@@ -52,7 +57,7 @@ from .common import IS_CYGWIN, IS_MSYS, IS_WSL, ERROR_SUCCESS, \
     PFILETIME, SUBLANG_DEFAULT
 
 ## Numeric version
-__numversion__ = (0, 9, 3)
+__numversion__ = (1, 0, 0)
 
 ## Current version of the library
 __version__ = '.'.join([str(num) for num in __numversion__])
@@ -94,8 +99,19 @@ elif IS_WSL:
         QueryInfoKey, QueryValue, QueryValueEx, SaveKey, SetValue, SetValueEx, \
         DisableReflectionKey, EnableReflectionKey, QueryReflectionKey
 else:
-    from .nullapi import CloseKey, ConnectRegistry, CreateKey, CreateKeyEx, \
-        DeleteKey, DeleteKeyEx, DeleteValue, EnumKey, EnumValue, \
-        ExpandEnvironmentStrings, FlushKey, LoadKey, OpenKey, OpenKeyEx, \
-        QueryInfoKey, QueryValue, QueryValueEx, SaveKey, SetValue, SetValueEx, \
-        DisableReflectionKey, EnableReflectionKey, QueryReflectionKey
+    try:
+        # Attempt importing the current name
+        from winreg import *
+    except ImportError:
+        try:
+            # Attempt importing the old name
+            from _winreg import *
+        except ImportError:
+            # For unsupported platforms, create null apis that always
+            # throw exceptions when called
+            from .nullapi import CloseKey, ConnectRegistry, CreateKey, \
+                CreateKeyEx, DeleteKey, DeleteKeyEx, DeleteValue, EnumKey, \
+                EnumValue, ExpandEnvironmentStrings, FlushKey, LoadKey, \
+                OpenKey, OpenKeyEx, QueryInfoKey, QueryValue, QueryValueEx, \
+                SaveKey, SetValue, SetValueEx, DisableReflectionKey, \
+                EnableReflectionKey, QueryReflectionKey
