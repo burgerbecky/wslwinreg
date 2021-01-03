@@ -279,7 +279,8 @@ class LocalWinregTests(BaseWinregTests):
             self.assertEqual(r, os.environ["windir"] + "\\test")
         # If windir isn't present, try from the Windows environment
         except KeyError:
-            self.assertEqual(r, ExpandEnvironmentStrings('%windir%') + '\\test')
+            self.assertEqual(r,
+                ExpandEnvironmentStrings(u'%windir%') + u'\\test')
 
     def test_context_manager(self):
         # ensure that the handle is closed if an exception occurs
