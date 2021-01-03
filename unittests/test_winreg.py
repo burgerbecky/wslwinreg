@@ -22,6 +22,8 @@ except ImportError:
 # FileNotFoundError introduced in Python 3
 if sys.version_info[0] == 2:
     FileNotFoundError = OSError
+else:
+    unicode = str
 
 # Use abspath() because msys2 only returns the module filename
 # instead of the full path
@@ -271,7 +273,7 @@ class LocalWinregTests(BaseWinregTests):
 
     def testExpandEnvironmentStrings(self):
         r = ExpandEnvironmentStrings(u"%windir%\\test")
-        self.assertEqual(type(r), str)
+        self.assertEqual(type(r), unicode)
         try:
             os.environ["windir"]
             self.assertEqual(r, os.environ["windir"] + "\\test")
@@ -437,8 +439,8 @@ class Win64WinregTests(BaseWinregTests):
     def test_named_arguments(self):
         self._test_named_args(HKEY_CURRENT_USER, test_key_name)
         # Clean up and also exercise the named arguments
-        DeleteKeyEx(key=HKEY_CURRENT_USER, sub_key=test_key_name,
-                    access=KEY_ALL_ACCESS, reserved=0)
+        DeleteKeyEx(HKEY_CURRENT_USER, test_key_name,
+                    KEY_ALL_ACCESS, 0)
 
     @unittest.skipIf(win32_edition() in ('WindowsCoreHeadless',
                      'IoTEdgeOS'), "APIs not available on WindowsCoreHeadless")
