@@ -57,7 +57,7 @@ from .common import IS_CYGWIN, IS_MSYS, IS_WSL, ERROR_SUCCESS, \
     PFILETIME, SUBLANG_DEFAULT
 
 ## Numeric version
-__numversion__ = (1, 0, 0)
+__numversion__ = (1, 0, 1)
 
 ## Current version of the library
 __version__ = '.'.join([str(num) for num in __numversion__])
@@ -81,7 +81,7 @@ __email__ = 'becky@burgerbecky.com'
 __license__ = 'MIT License'
 
 ## Copyright owner
-__copyright__ = 'Copyright 2020 Rebecca Ann Heineman'
+__copyright__ = 'Copyright 2020-2021 Rebecca Ann Heineman'
 
 # Load in the proper implementation based on the
 # underlying operating system

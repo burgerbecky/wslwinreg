@@ -42,7 +42,7 @@ Windows Subsystem for Linux).
     :target: https://github.com/burgerbecky/wslwinreg/blob/master/LICENSE.txt
     :alt: License
 .. |Travis| image:: https://img.shields.io/travis/burgerbecky/wslwinreg.svg
-    :target: https://travis-ci.org/burgerbecky/wslwinreg
+    :target: https://travis-ci.com/burgerbecky/wslwinreg
     :alt: Travis Status
 .. |Docs| image:: https://img.shields.io/readthedocs/wslwinreg.svg
     :target: http://wslwinreg.readthedocs.io

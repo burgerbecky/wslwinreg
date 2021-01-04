@@ -8,7 +8,7 @@ setup.py clean
 setup.py sdist bdist_wheel
 twine upload --verbose dist/*
 
-Copyright 2020 by Rebecca Ann Heineman becky@burgerbecky.com
+Copyright 2020-2021 by Rebecca Ann Heineman becky@burgerbecky.com
 
 It is released under an MIT Open Source license. Please see LICENSE
 for license details. Yes, you can use it in a
@@ -22,7 +22,8 @@ import io
 import os
 import sys
 import setuptools
-import burger
+
+# pylint: disable=import-outside-toplevel
 
 CWD = os.path.dirname(os.path.abspath(__file__))
 
@@ -36,7 +37,8 @@ PROJECT_KEYWORDS = [
     'development',
     'windows',
     'visual studio',
-    'vs'
+    'vs',
+    'burger'
 ]
 
 # Manually import the project
@@ -49,8 +51,7 @@ with io.open(os.path.join(CWD, 'README.rst'), encoding='utf-8') as filep:
 # Create the dependency list
 INSTALL_REQUIRES = [
     'setuptools >= 17.1',
-    'enum34 >= 1.0.0',
-    'burger >= 1.1.36'
+    'enum34 >= 1.0.0'
 ]
 
 # Project classifiers
@@ -134,7 +135,8 @@ CLEAN_DIR_RECURSE_LIST = [
     'temp',
     '__pycache__',
     '_build',
-    'bin'
+    'bin',
+    '.vs'
 ]
 
 CLEAN_EXTENSION_LIST = [
@@ -153,11 +155,16 @@ def clean(working_dir):
     """
 
     # Delete all folders, including read only files
+    try:
+        from burger import delete_directory, clean_directories, clean_files
+    except ImportError as exc:
+        print("Install python module burger with pip to run clean")
+        raise exc
 
     for item in CLEAN_DIR_LIST:
-        burger.delete_directory(os.path.join(working_dir, item))
+        delete_directory(os.path.join(working_dir, item))
 
-    burger.clean_directories(
+    clean_directories(
         working_dir,
         CLEAN_DIR_RECURSE_LIST,
         recursive=True)
@@ -166,7 +173,7 @@ def clean(working_dir):
     # Delete all *.pyc and *.pyo files
     #
 
-    burger.clean_files(
+    clean_files(
         working_dir,
         name_list=CLEAN_EXTENSION_LIST,
         recursive=True)
@@ -186,11 +193,22 @@ if __name__ == '__main__':
         clean(CWD)
 
     # Unlock the files to handle Perforce locking
-    LOCK_LIST = burger.unlock_files(CWD) + \
-        burger.unlock_files(os.path.join(CWD, PROJECT_NAME))
+    try:
+        from burger import unlock_files, lock_files
+    except ImportError:
+        def lock_files(not_used):
+            """ Stub """
+            return not_used
+
+        def unlock_files(not_used):
+            """ Stub """
+            return not_used
+
+    LOCK_LIST = unlock_files(CWD) + \
+        unlock_files(os.path.join(CWD, PROJECT_NAME))
     try:
         setuptools.setup(**SETUP_ARGS)
 
     # If any files were unlocked, relock them
     finally:
-        burger.lock_files(LOCK_LIST)
+        lock_files(LOCK_LIST)

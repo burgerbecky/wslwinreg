@@ -13,7 +13,7 @@ Package that implements winreg for Windows Subsystem for Linux
 # pylint: disable=unused-argument
 # pylint: disable=broad-except
 # pylint: disable=redefined-builtin
-# pylint: warning,raise-missing-from
+# pylint: disable=raise-missing-from
 
 import os
 import stat
