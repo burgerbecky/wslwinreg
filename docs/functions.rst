@@ -20,6 +20,18 @@ wslwinreg.common.from_registry_bytes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. doxygenfunction:: wslwinreg::common::from_registry_bytes
 
+wslwinreg.get_HKCU
+^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::get_HKCU
+
+wslwinreg.get_HKLM_32
+^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::get_HKLM_32
+
+wslwinreg.get_HKLM_64
+^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::get_HKLM_64
+
 Null implementation
 -------------------
 
@@ -118,6 +130,18 @@ wslwinreg.nullapi.EnableReflectionKey
 wslwinreg.nullapi.QueryReflectionKey
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. doxygenfunction:: wslwinreg::nullapi::QueryReflectionKey
+
+wslwinreg.nullapi.convert_to_windows_path
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::nullapi::convert_to_windows_path
+
+wslwinreg.nullapi.convert_from_windows_path
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::nullapi::convert_from_windows_path
+
+wslwinreg.nullapi.get_file_info
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::nullapi::get_file_info
 
 Cygwin / MSYS2 implementation
 -----------------------------
@@ -218,3 +242,126 @@ wslwinreg.cygwinapi.EnableReflectionKey
 wslwinreg.cygwinapi.QueryReflectionKey
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. doxygenfunction:: wslwinreg::cygwinapi::QueryReflectionKey
+
+wslwinreg.cygwinapi.convert_to_windows_path
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::cygwinapi::convert_to_windows_path
+
+wslwinreg.cygwinapi.convert_from_windows_path
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::cygwinapi::convert_from_windows_path
+
+wslwinreg.cygwinapi.get_file_info
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::cygwinapi::get_file_info
+
+Windows Subsystem for Linux implementation
+------------------------------------------
+
+On Windows Subsystem for Windows, the calls are sent to a server
+that will issue the calls directly in the Windows host which
+performs the actual the low level work.
+
+wslwinreg.wslapi.CloseKey
+^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::CloseKey
+
+wslwinreg.wslapi.ConnectRegistry
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::ConnectRegistry
+
+wslwinreg.wslapi.CreateKey
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::CreateKey
+
+wslwinreg.wslapi.CreateKeyEx
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::CreateKeyEx
+
+wslwinreg.wslapi.DeleteKey
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::DeleteKey
+
+wslwinreg.wslapi.DeleteKeyEx
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::DeleteKeyEx
+
+wslwinreg.wslapi.DeleteValue
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::DeleteValue
+
+wslwinreg.wslapi.EnumKey
+^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::EnumKey
+
+wslwinreg.wslapi.EnumValue
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::EnumValue
+
+wslwinreg.wslapi.ExpandEnvironmentStrings
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::ExpandEnvironmentStrings
+
+wslwinreg.wslapi.FlushKey
+^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::FlushKey
+
+wslwinreg.wslapi.LoadKey
+^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::LoadKey
+
+wslwinreg.wslapi.OpenKey
+^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::OpenKey
+
+wslwinreg.wslapi.OpenKeyEx
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::OpenKeyEx
+
+wslwinreg.wslapi.QueryInfoKey
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::QueryInfoKey
+
+wslwinreg.wslapi.QueryValue
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::QueryValue
+
+wslwinreg.wslapi.QueryValueEx
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::QueryValueEx
+
+wslwinreg.wslapi.SaveKey
+^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::SaveKey
+
+wslwinreg.wslapi.SetValue
+^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::SetValue
+
+wslwinreg.wslapi.SetValueEx
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::SetValueEx
+
+wslwinreg.wslapi.DisableReflectionKey
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::DisableReflectionKey
+
+wslwinreg.wslapi.EnableReflectionKey
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::EnableReflectionKey
+
+wslwinreg.wslapi.QueryReflectionKey
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::QueryReflectionKey
+
+wslwinreg.wslapi.convert_to_windows_path
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::convert_to_windows_path
+
+wslwinreg.wslapi.convert_from_windows_path
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::convert_from_windows_path
+
+wslwinreg.wslapi.get_file_info
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.. doxygenfunction:: wslwinreg::wslapi::get_file_info

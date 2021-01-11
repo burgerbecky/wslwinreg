@@ -45,31 +45,84 @@ class Commands(IntEnum):
     """
     Commands to send to the bridging executable.
     """
+
+    ## Exit the server
     ABORT = 0
+
+    ## Connection handshake
     CONNECT = 1
+
+    ## Perform CloseKey()
     CLOSE_KEY = 2
+
+    ## Perform ConnectRegistry()
     CONNECT_REGISTRY = 3
+
+    ## Perform CreateKey()
     CREATE_KEY = 4
+
+    ## Perform CreateKeyEx()
     CREATE_KEY_EX = 5
+
+    ## Perform DeleteKey()
     DELETE_KEY = 6
+
+    ## Perform DeleteKeyEx()
     DELETE_KEY_EX = 7
+
+    ## Perform DeleteValue()
     DELETE_VALUE = 8
+
+    ## Perform EnumKey()
     ENUM_KEY = 9
+
+    ## Perform EnumValue()
     ENUM_VALUE = 10
+
+    ## Perform ExpandEnvironmentStrings()
     EXPAND_ENVIRONMENTSTRINGS = 11
+
+    ## Perform FlushKey()
     FLUSH_KEY = 12
+
+    ## Perform LoadKey()
     LOAD_KEY = 13
+
+    ## Perform OpenKey()
     OPEN_KEY = 14
+
+    ## Perform OpenKeyEx()
     OPEN_KEY_EX = 15
+
+    ## Perform QueryInfoKey()
     QUERY_INFO_KEY = 16
+
+    ## Perform QueryValue()
     QUERY_VALUE = 17
+
+    ## Perform QueryValueEx()
     QUERY_VALUE_EX = 18
+
+    ## Perform SaveKey()
     SAVE_KEY = 19
+
+    ## Perform SetValue()
     SET_VALUE = 20
+
+    ## Perform SetValueEx()
     SET_VALUE_EX = 21
+
+    ## Perform DisableReflectionKey()
     DISABLE_REFLECTION_KEY = 22
+
+    ## Perform EnableReflectionKey()
     ENABLE_REFLECTION_KEY = 23
+
+    ## Perform QueryReflectionKey()
     QUERY_REFLECTION_KEY = 24
+
+    ## Perform get_file_into()
+    GET_FILE_INFO = 25
 
 ## Loopback address
 _LOCALHOST = '127.0.0.1'
@@ -91,6 +144,8 @@ if _EXESUFFIX in ('amd64', 'x86_64', 'em64t'):
 _WIN_EXE = os.path.join(_WIN_DIR, 'backend-' + _EXESUFFIX + '.exe')
 
 # Make sure it's executable
+
+## Saved stat for the backend server
 _STAT = os.stat(_WIN_EXE)
 if not _STAT.st_mode & stat.S_IEXEC:
     os.chmod(_WIN_EXE, _STAT.st_mode | stat.S_IEXEC)
@@ -121,6 +176,9 @@ except OSError:
 # At thie point, the exe had started, connect to it.
 _LISTEN_SOCKET.settimeout(3.0)
 try:
+    ## @var _CONNECTION_ADDR
+    # Connection address
+
     ## Connection socket
     _CONNECTION_SOCKET, _CONNECTION_ADDR = _LISTEN_SOCKET.accept()
 except socket.timeout:
@@ -262,6 +320,7 @@ def recv_string(convert_to_string=True):
                 raise socket.timeout("Connection broken")
             data.extend(packet)
             del packet
+        data = bytes(data)
     else:
         data = b''
 
@@ -1285,3 +1344,122 @@ def QueryReflectionKey(key):
     # Error code
     return_code = struct.unpack('<B', data)[0]
     return return_code != 0
+
+########################################
+
+
+def convert_to_windows_path(path_name):
+    """
+    Convert a WSL path to windows if needed.
+
+    If the path is already Windows format, it will be returned unchanged.
+
+    Args:
+        path_name: Windows or Linux pathname
+    Return:
+        Pathname converted to Windows.
+    See Also:
+        convert_from_windows_path
+    """
+
+    # Network drive name?
+    if path_name.startswith('\\\\') or ':' in path_name:
+        return path_name
+
+    # The tool doesn't process ~ properly, help it by preprocessing here.
+    args = ('wslpath',
+        '-a',
+        '-w',
+        os.path.abspath(os.path.expanduser(path_name))
+            )
+
+    # Perform the conversion
+    tempfp = subprocess.Popen(args, stdout=subprocess.PIPE,
+                              stderr=None, universal_newlines=True)
+    # Get the string returned by cygpath
+    stdoutstr, _ = tempfp.communicate()
+
+    # Error? Fail
+    if tempfp.returncode:
+        return None
+    return stdoutstr.strip()
+
+########################################
+
+
+def convert_from_windows_path(path_name):
+    """
+    Convert an absolute Windows path to WSL.
+
+    If the path is already Linux format, it will be returned unchanged.
+
+    Args:
+        path_name: Absolute Windows pathname
+    Return:
+        Pathname converted to Linux.
+    See Also:
+        convert_to_windows_path
+    """
+
+    # Network drive name?
+    if path_name[0] in ('~', '/'):
+        return path_name
+
+    # Create command list
+    args = ('wslpath', '-a', '-u', path_name)
+
+    # Perform the conversion
+    tempfp = subprocess.Popen(args, stdout=subprocess.PIPE,
+                              stderr=None, universal_newlines=True)
+    # Get the string returned by cygpath
+    stdoutstr, _ = tempfp.communicate()
+
+    # Error? Fail
+    if tempfp.returncode:
+        return None
+    return stdoutstr.strip()
+
+########################################
+
+
+def get_file_info(path_name, string_name):
+    r"""
+    Extract information from a windows exe file version resource.
+
+    Given a windows exe file, extract the 'StringFileInfo' resource and
+    parse out the data chunk named by string_name.
+
+    Full list of resource names:
+        https://docs.microsoft.com/en-us/windows/desktop/menurc/stringfileinfo-block
+
+    Examples:
+        file_version = get_file_info('devenv.exe', 'FileVersion')
+        product_version =  get_file_info('devenv.exe', 'ProductVersion')
+
+    Args:
+        path_name: Name of the windows file.
+        string_name: Name of the data chunk to retrieve
+
+    Return:
+        None if no record found or an error, or a valid string
+    """
+
+    # Sanity check
+    test_string(path_name)
+    test_string(string_name)
+
+    # Handle import for Cygwin
+    path_name = convert_to_windows_path(path_name)
+
+    # Send the command and the strings
+    buffer = struct.pack(
+        '<B',
+        Commands.GET_FILE_INFO.value)
+
+    _CONNECTION_SOCKET.sendall(
+        buffer + create_string_buffer(path_name) +
+        create_string_buffer(string_name))
+
+    new_data = recv_string()
+    handleLRESULT()
+    return new_data

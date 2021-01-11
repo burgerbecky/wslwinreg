@@ -15,3 +15,8 @@ PyHKEY
 ^^^^^^
 .. doxygenclass:: wslwinreg::cygwinapi::PyHKEY
     :members:
+
+WinRegKey
+^^^^^^^^^
+.. doxygenclass:: wslwinreg::WinRegKey
+    :members:

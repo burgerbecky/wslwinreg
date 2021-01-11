@@ -17,6 +17,13 @@ or implementing custom code to grant access.
 
 ---
 
+Windows support
+---------------
+
+On Windows native platform, ``winreg`` is directly imported and all
+calls simple are passed through so the native implementation is
+used instead of the alternate versions.
+
 Cygwin and MSYS2 support
 ------------------------
 

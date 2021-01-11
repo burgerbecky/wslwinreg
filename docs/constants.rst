@@ -288,9 +288,17 @@ Windows C++ data types
 
 These classes are used to describe the parameters to Windows functions.
 
-PCVOID
+LPCVOID
+^^^^^^^
+.. doxygenvariable:: wslwinreg::common::LPCVOID
+
+LPVOID
 ^^^^^^
-.. doxygenvariable:: wslwinreg::common::PCVOID
+.. doxygenvariable:: wslwinreg::common::LPVOID
+
+BOOL
+^^^^
+.. doxygenvariable:: wslwinreg::common::BOOL
 
 WORD
 ^^^^

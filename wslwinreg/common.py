@@ -30,6 +30,7 @@ from ctypes import (
     c_char_p,
     c_int,
     c_uint,
+    c_long,
     c_ulong,
     c_ulonglong,
     c_ushort,
@@ -107,7 +108,9 @@ __all__ = [
     'FORMAT_MESSAGE_MAX_WIDTH_MASK',
     'LANG_NEUTRAL',
     'SUBLANG_DEFAULT',
-    'PCVOID',
+    'LPCVOID',
+    'LPVOID',
+    'BOOL',
     'WORD',
     'DWORD',
     'PDWORD',
@@ -411,7 +414,13 @@ LANG_NEUTRAL = 0x00
 SUBLANG_DEFAULT = 0x01
 
 ## ``const void *`` C void pointer
-PCVOID = c_void_p
+LPCVOID = c_void_p
+
+## ``void *`` C void pointer
+LPVOID = c_void_p
+
+## BOOL 32 bit C integer type
+BOOL = c_long
 
 ## ``short int`` 16 bit C integer type
 WORD = c_ushort

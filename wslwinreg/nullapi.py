@@ -12,6 +12,7 @@ Package that contains stub functions for unsupported platforms.
 
 # Disable reusing reserved words.
 # pylint: disable=redefined-builtin
+# pylint: disable=unused-argument
 
 from .common import KEY_WRITE, KEY_WOW64_64KEY, KEY_READ
 
@@ -315,3 +316,53 @@ def QueryReflectionKey(key):
     """
 
     raise _NOT_IMPL
+
+########################################
+
+
+def convert_to_windows_path(path_name):
+    """
+    Convert pathname to Windows.
+
+    This is the null function, it returns the path_name unchanged.
+
+    Args:
+        path_name: Absolute Windows pathname
+    Return:
+        path_name as is.
+    """
+    return path_name
+
+
+########################################
+
+
+def convert_from_windows_path(path_name):
+    """
+    Convert pathname from Windows.
+
+    This is the null function, it returns the path_name unchanged.
+
+    Args:
+        path_name: Absolute Windows pathname
+    Return:
+        path_name as is.
+    """
+    return path_name
+
+########################################
+
+
+def get_file_info(path_name, string_name):
+    """
+    Not implemented.
+
+    Args:
+        path_name: Name of the windows file.
+        string_name: Name of the data chunk to retrieve
+
+    Return:
+        None
+    """
+
+    return None

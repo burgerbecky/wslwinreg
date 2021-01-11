@@ -14,16 +14,19 @@ Package that implements winreg for MSYS and Cygwin
 # pylint: disable=broad-except
 
 from re import sub as re_sub
+import array
+import os.path
+import subprocess
 from ctypes import cdll, create_unicode_buffer, c_void_p, c_ulong, byref, \
-    cast, sizeof, create_string_buffer
+    cast, sizeof, create_string_buffer, wstring_at, string_at
 
 from .common import PY2, builtins, ERROR_SUCCESS, ERROR_FILE_NOT_FOUND, \
     ERROR_MORE_DATA, KEY_WOW64_64KEY, KEY_WRITE, KEY_READ, REG_SZ, \
     FORMAT_MESSAGE_ALLOCATE_BUFFER, FORMAT_MESSAGE_IGNORE_INSERTS, \
-    FORMAT_MESSAGE_FROM_SYSTEM, LANG_NEUTRAL, PCVOID, DWORD, PDWORD, \
+    FORMAT_MESSAGE_FROM_SYSTEM, LANG_NEUTRAL, LPCVOID, LPVOID, DWORD, PDWORD, \
     LPDWORD, LONG, PLONG, PBYTE, LPBYTE, LPWSTR, LPCWSTR, HKEY, PHKEY, \
     HLOCAL, REGSAM, FILETIME, PFILETIME, SUBLANG_DEFAULT, \
-    to_registry_bytes, from_registry_bytes, winerror_to_errno
+    to_registry_bytes, from_registry_bytes, winerror_to_errno, BOOL
 
 # Test kernel32 in case cdll is the broken version
 try:
@@ -37,6 +40,8 @@ except OSError:
     ## Loaded instance of the Windows dll advapi32
     cdll.advapi32 = CDLL("advapi32.dll", use_errno=True)
 
+    ## Loaded instance of the Windows dll version
+    cdll.version = CDLL('version.dll', use_errno=True)
 
 ## Type long for Python 2 compatibility
 try:
@@ -49,11 +54,11 @@ except NameError:
 
 # Windows functions extracted from cdll
 
-## WINBASEAPI DWORD WINAPI FormatMessageW(DWORD,PCVOID,DWORD,DWORD,LPWSTR,DWORD,
-#                                        va_list*)
+## WINBASEAPI DWORD WINAPI FormatMessageW(DWORD,LPCVOID,DWORD,DWORD,LPWSTR,
+#                                         DWORD, va_list*)
 FormatMessageW = cdll.kernel32.FormatMessageW
 FormatMessageW.restype = DWORD
-FormatMessageW.argtypes = [DWORD, PCVOID, DWORD, DWORD, PCVOID, DWORD,
+FormatMessageW.argtypes = [DWORD, LPCVOID, DWORD, DWORD, LPCVOID, DWORD,
                            c_void_p]
 
 ## WINBASEAPI DWORD WINAPI GetLastError(void);
@@ -88,7 +93,7 @@ RegCreateKeyW.restype = LONG
 RegCreateKeyW.argtypes = [HKEY, LPCWSTR, PHKEY]
 
 ## WINADVAPI LONG WINAPI RegCreateKeyW(HKEY,LPCWSTR,DWORD, LPWSTR, DWORD,
-#                                     REGSAM, PCVOID, PHKEY, LPDWORD);
+#                                     REGSAM, LPCVOID, PHKEY, LPDWORD);
 RegCreateKeyExW = cdll.advapi32.RegCreateKeyExW
 RegCreateKeyExW.restype = LONG
 RegCreateKeyExW.argtypes = [
@@ -98,7 +103,7 @@ RegCreateKeyExW.argtypes = [
     LPWSTR,
     DWORD,
     REGSAM,
-    PCVOID,
+    LPCVOID,
     PHKEY,
     LPDWORD]
 
@@ -195,6 +200,21 @@ RegSetValueW.argtypes = [HKEY, LPCWSTR, DWORD, LPCWSTR, DWORD]
 RegSetValueExW = cdll.advapi32.RegSetValueExW
 RegSetValueExW.restype = LONG
 RegSetValueExW.argtypes = [HKEY, LPCWSTR, DWORD, DWORD, PBYTE, DWORD]
+
+## WINADVAPI DWORD WINAPI GetFileVersionInfoSizeW(LPCWSTR, LPDWORD);
+GetFileVersionInfoSizeW = cdll.version.GetFileVersionInfoSizeW
+GetFileVersionInfoSizeW.restype = DWORD
+GetFileVersionInfoSizeW.argtypes = [LPCWSTR, LPDWORD]
+
+## WINADVAPI BOOL WINAPI GetFileVersionInfoW(LPCWSTR, DWORD, DWORD, LPVOID);
+GetFileVersionInfoW = cdll.version.GetFileVersionInfoW
+GetFileVersionInfoW.restype = BOOL
+GetFileVersionInfoW.argtypes = [LPCWSTR, DWORD, DWORD, LPVOID]
+
+## WINADVAPI BOOL WINAPI VerQueryValueW(LPCVOID, LPCWSTR, LPVOID, PUINT);
+VerQueryValueW = cdll.version.VerQueryValueW
+VerQueryValueW.restype = BOOL
+VerQueryValueW.argtypes = [LPCVOID, LPCWSTR, LPVOID, PLONG]
 
 ########################################
 
@@ -1271,3 +1291,152 @@ def QueryReflectionKey(key):
             PyHKEY.make(key),
             byref(is_reflection_disabled)))
     return is_reflection_disabled != 0
+
+########################################
+
+
+def convert_to_windows_path(path_name):
+    """
+    Convert a MSYS/Cygwin path to windows if needed.
+
+    If the path is already Windows format, it will be returned unchanged.
+
+    Args:
+        path_name: Windows or Linux pathname
+    Return:
+        Pathname converted to Windows.
+    See Also:
+        convert_from_windows_path
+    """
+
+    # Network drive name?
+    if path_name.startswith('\\\\') or ':' in path_name:
+        return path_name
+
+    # The tool doesn't process ~ properly, help it by preprocessing here.
+    args = ('cygpath',
+        '-a',
+        '-w',
+        os.path.abspath(os.path.expanduser(path_name))
+            )
+
+    # Perform the conversion
+    tempfp = subprocess.Popen(args, stdout=subprocess.PIPE,
+                              stderr=None, universal_newlines=True)
+    # Get the string returned by cygpath
+    stdoutstr, _ = tempfp.communicate()
+
+    # Error? Fail
+    if tempfp.returncode:
+        return None
+    return stdoutstr.strip()
+
+########################################
+
+
+def convert_from_windows_path(path_name):
+    """
+    Convert an absolute Windows path to Cygwin/MSYS2.
+
+    If the path is already Cygwin/MSYS2 format, it will be returned unchanged.
+
+    Args:
+        path_name: Absolute Windows pathname
+    Return:
+        Pathname converted to Linux.
+    See Also:
+        convert_to_windows_path
+    """
+
+    # Network drive name?
+    if path_name[0] in ('~', '/'):
+        return path_name
+
+    # Create command list
+    args = ('cygpath', '-a', '-u', path_name)
+
+    # Perform the conversion
+    tempfp = subprocess.Popen(args, stdout=subprocess.PIPE,
+                              stderr=None, universal_newlines=True)
+    # Get the string returned by cygpath
+    stdoutstr, _ = tempfp.communicate()
+
+    # Error? Fail
+    if tempfp.returncode:
+        return None
+    return stdoutstr.strip()
+
+########################################
+
+
+def get_file_info(path_name, string_name):
+    r"""
+    Extract information from a windows exe file version resource.
+
+    Given a windows exe file, extract the 'StringFileInfo' resource and
+    parse out the data chunk named by string_name.
+
+    Full list of resource names:
+        https://docs.microsoft.com/en-us/windows/desktop/menurc/stringfileinfo-block
+
+    Examples:
+        file_version = get_file_info('devenv.exe', 'FileVersion')
+        product_version =  get_file_info('devenv.exe', 'ProductVersion')
+
+    Args:
+        path_name: Name of the windows file.
+        string_name: Name of the data chunk to retrieve
+
+    Return:
+        None if no record found or an error, or a valid string
+    """
+
+    # Handle import for Cygwin
+    path_name = convert_to_windows_path(path_name)
+
+    # Ensure it's unicode
+    wchar_filename = LPWSTR(path_name)
+
+    # Call windows to get the data size
+    size = GetFileVersionInfoSizeW(wchar_filename, None)
+
+    # Was there no data to return?
+    if size:
+
+        # Create buffer for resource data
+        res_data = create_string_buffer(size)
+
+        # Extract the file data
+        GetFileVersionInfoW(
+            wchar_filename, 0, size, res_data)
+
+        # Find the default codepage (Not everything is in English)
+        record = LPVOID()
+        length = LONG()
+        VerQueryValueW(
+            res_data,
+            '\\VarFileInfo\\Translation',
+            byref(record),
+            byref(length))
+        # Was a codepage found?
+        if length.value:
+
+            # Parse out the first found codepage (It's the default
+            # language) it's in the form of two 16 bit shorts
+            codepages = array.array(
+                'H', string_at(
+                    record.value, length.value))
+
+            # Extract information from the version using unicode and
+            # the proper codepage
+            if VerQueryValueW(
+                    res_data,
+                    '\\StringFileInfo\\{0:04x}{1:04x}\\{2}'.format(
+                        codepages[0],
+                        codepages[1],
+                        string_name),
+                    byref(record),
+                    byref(length)):
+                # Return the final result removing the terminating zero
+                return wstring_at(record.value, length.value - 1)
+    return None

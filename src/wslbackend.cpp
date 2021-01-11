@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strsafe.h>
 
 #ifndef ARRAYSIZE
 #define ARRAYSIZE(a) (sizeof(a) / sizeof((a)[0]))
@@ -72,7 +73,8 @@ enum Commands : unsigned char {
     SET_VALUE_EX = 21,
     DISABLE_REFLECTION_KEY = 22,
     ENABLE_REFLECTION_KEY = 23,
-    QUERY_REFLECTION_KEY = 24
+    QUERY_REFLECTION_KEY = 24,
+    GET_FILE_INFO = 25
 };
 
 /***************************************
@@ -1391,6 +1393,92 @@ static void QueryReflectionKey(SOCKET sendsocket)
 
 /***************************************
 
+    Perform get_file_info()
+    Input: DWORD string length, UTF-8 pathname,
+        DWORD filename length, UTF-8 stringname
+    Output: DWORD Error + message if any
+
+***************************************/
+
+static void get_file_info(SOCKET sendsocket)
+{
+    struct LANGANDCODEPAGE {
+        WORD wLanguage;
+        WORD wCodePage;
+    };
+
+    DWORD uNewSize = 0;
+    WCHAR* pResult = nullptr;
+    void* pBuffer = nullptr;
+
+    // Get the path_name string
+    WCHAR* pPathName = nullptr;
+    LRESULT iResult = FetchWideString(sendsocket, &pPathName);
+    if (iResult == ERROR_SUCCESS) {
+
+        // Get the string_name string
+        WCHAR* pStringName = nullptr;
+        iResult = FetchWideString(sendsocket, &pStringName);
+        if (iResult == ERROR_SUCCESS) {
+
+            // Issue the call
+
+            // Is there any data in the file?
+            DWORD uBufferSize = GetFileVersionInfoSizeW(pPathName, nullptr);
+            if (uBufferSize) {
+                // Create a buffer for the data
+                pBuffer = malloc(uBufferSize);
+                if (pBuffer) {
+                    // Ensure the buffer is clear
+                    memset(pBuffer, 0, uBufferSize);
+
+                    // Get the file information
+                    GetFileVersionInfoW(pPathName, 0, uBufferSize, pBuffer);
+
+                    // Get the translation table
+                    UINT uLength = 0;
+                    LANGANDCODEPAGE* pTranslate = nullptr;
+                    VerQueryValueW(pBuffer, L"\\VarFileInfo\\Translation",
+                        (LPVOID*)&pTranslate, &uLength);
+
+                    // Was there a translation table found?
+                    if (uLength) {
+
+                        // Create the translation query string with stringname
+                        WCHAR infoString[1024];
+                        StringCchPrintfW(infoString, 1024-1,
+                            L"\\StringFileInfo\\%04x%04x\\%s",
+                            pTranslate->wLanguage, pTranslate->wCodePage,
+                            pStringName);
+
+                        // Extract the string
+                        if (VerQueryValueW(pBuffer, infoString,
+                                (LPVOID*)&pResult, &uLength)) {
+                            // Accept the string, ignore the trailing zero
+                            uNewSize = uLength - 1;
+                        }
+                    }
+                }
+            }
+        }
+        if (pStringName) {
+            free(pStringName);
+        }
+    }
+    if (pPathName) {
+        free(pPathName);
+    }
+    // Transmit it back with or without the error message
+    // Send the result string
+    SendUTF8String(sendsocket, pResult, uNewSize);
+    if (pBuffer) {
+        free(pBuffer);
+    }
+    ReturnResult(sendsocket, iResult);
+}
+
+/***************************************
+
     Process the socket information
 
 ***************************************/
@@ -1475,6 +1563,9 @@ static void ProcessCommands(SOCKET sendsocket)
             break;
         case QUERY_REFLECTION_KEY:
             QueryReflectionKey(sendsocket);
+            break;
+        case GET_FILE_INFO:
+            get_file_info(sendsocket);
             break;
         default:
             break;
