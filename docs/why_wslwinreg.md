@@ -21,7 +21,7 @@ Windows support
 ---------------
 
 On Windows native platform, ``winreg`` is directly imported and all
-calls simple are passed through so the native implementation is
+calls simply are passed through so the native implementation is
 used instead of the alternate versions.
 
 Cygwin and MSYS2 support
@@ -39,7 +39,7 @@ Ubuntu and other distributions of Linux running under WSL run
 in a virtual machine that is isolated from the Window host
 machine to the point that native calls are not possible. To
 solve this issue, a Windows native backend is launched and
-through a loopback TCP/IP socket communication is established
+through a loopback TCP/IP socket, communication is established
 so remote procedure calls can be issued and results returned to
 ``wslwinreg`` to allow access to the native Windows registry.
 
