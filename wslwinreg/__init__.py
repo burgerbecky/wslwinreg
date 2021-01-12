@@ -63,7 +63,7 @@ from .common import IS_CYGWIN, IS_MSYS, IS_WSL, ERROR_SUCCESS, \
     PFILETIME, SUBLANG_DEFAULT
 
 ## Numeric version
-__numversion__ = (1, 0, 2)
+__numversion__ = (1, 0, 3)
 
 ## Current version of the library
 __version__ = '.'.join([str(num) for num in __numversion__])
@@ -294,7 +294,7 @@ def get_HKCU():
     Returns:
         Read only WinRegKey for HKEY_CURRENT_USER
     """
-    WinRegKey(HKEY_CURRENT_USER, None, KEY_READ)
+    return WinRegKey(HKEY_CURRENT_USER, None, KEY_READ)
 
 ########################################
 
@@ -306,7 +306,7 @@ def get_HKLM_32():
     Returns:
         Read only WinRegKey for HKEY_LOCAL_MACHINE with KEY_WOW64_32KEY
     """
-    WinRegKey(HKEY_LOCAL_MACHINE, None, KEY_READ | KEY_WOW64_32KEY)
+    return WinRegKey(HKEY_LOCAL_MACHINE, None, KEY_READ | KEY_WOW64_32KEY)
 
 ########################################
 
