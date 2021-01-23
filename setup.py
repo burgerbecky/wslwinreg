@@ -110,11 +110,7 @@ SETUP_ARGS = dict(
     include_package_data=True,
     data_files=DATA_FILES,
     package_data={
-        PROJECT_NAME: [
-            'bin/backend-arm.exe',
-            'bin/backend-arm64.exe',
-            'bin/backend-x64.exe',
-            'bin/backend-x86.exe']
+        PROJECT_NAME: ['bin/*.exe']
     }
 )
 
