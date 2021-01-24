@@ -17,7 +17,7 @@ Please? It's not like I'm asking you for money!
 
 """
 
-from __future__ import absolute_import, print_function, unicode_literals
+from __future__ import absolute_import, print_function
 import io
 import os
 import sys
@@ -96,7 +96,7 @@ SETUP_ARGS = dict(
     license=PROJECT_MODULE.__license__,
     url=PROJECT_MODULE.__uri__,
 
-    author=PROJECT_MODULE.__author__.encode('utf8'),
+    author=PROJECT_MODULE.__author__,
     author_email=PROJECT_MODULE.__email__,
 
     keywords=PROJECT_KEYWORDS,
