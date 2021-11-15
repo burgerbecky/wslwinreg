@@ -2,7 +2,7 @@
 wslwinreg for Cygwin, MSYS2 and WSL
 ===================================
 
-|PyPi| |License| |Travis| |Docs| |Versions|
+|PyPi| |License| |GithubActions| |Docs| |Versions|
 
 The ``wslwinreg`` module is a drop in replacement for winreg for systems
 running under Cygwin, MSYS2, or Windows Subsystem for Linux.
@@ -41,9 +41,9 @@ Windows Subsystem for Linux).
 .. |License| image:: https://img.shields.io/pypi/l/wslwinreg.svg
     :target: https://github.com/burgerbecky/wslwinreg/blob/master/LICENSE.txt
     :alt: License
-.. |Travis| image:: https://img.shields.io/travis/burgerbecky/wslwinreg.svg
-    :target: https://travis-ci.com/burgerbecky/wslwinreg
-    :alt: Travis Status
+.. |GithubActions| image:: https://github.com/burgerbecky/wslwinreg/actions/workflows/python-build.yml/badge.svg
+    :target: https://github.com/burgerbecky/wslwinreg/actions
+    :alt: Github Actions Status
 .. |Docs| image:: https://img.shields.io/readthedocs/wslwinreg.svg
     :target: http://wslwinreg.readthedocs.io
     :alt: Documentation Status
