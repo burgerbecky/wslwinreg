@@ -22,8 +22,8 @@ jobs:
           - "windows-2019-py38"
           - "windows-2019-py39"
           - "windows-2019-py310"
-          - "windows-2019-pypy2"
-          - "windows-2019-pypy3"
+        # - "windows-2019-pypy2"
+        # - "windows-2019-pypy3"
         # Specific data for each version being built
         include:
           # Windows 2019 Server
@@ -55,14 +55,14 @@ jobs:
             python: "3.10"
             os: "windows-2019"
             tox_env: "py310"
-          - name: "windows-2019-pypy2"
-            python: "pypy2"
-            os: "windows-2019"
-            tox_env: "pypy2"
-          - name: "windows-2019-pypy3"
-            python: "pypy3"
-            os: "windows-2019"
-            tox_env: "pypy3"
+          #- name: "windows-2019-pypy2"
+          #  python: "pypy2"
+          #  os: "windows-2019"
+          #  tox_env: "pypy2"
+          #- name: "windows-2019-pypy3"
+          #  python: "pypy3"
+          #  os: "windows-2019"
+          #  tox_env: "pypy3"
 
     steps:
       - uses: actions/checkout@v2
