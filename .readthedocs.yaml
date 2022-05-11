@@ -33,6 +33,8 @@ build:
     post_checkout:
       - git clone https://github.com/Feneric/doxypypy.git
       - git clone https://github.com/perrsona1234/truetype.git
+      - export DOTFONTPATH=./truetype
+      - export
       - mkdir ~/.fonts
       - cp ./truetype/comic.ttf ~/.fonts/comic.ttf
       - cp ./truetype/comicbd.ttf ~/.fonts/comicbd.ttf
@@ -42,7 +44,7 @@ build:
     post_install:
       - /home/docs/checkouts/readthedocs.org/user_builds/${READTHEDOCS_PROJECT}/envs/latest/bin/python -m pip install -U setuptools distlib commonmark recommonmark
       - /home/docs/checkouts/readthedocs.org/user_builds/${READTHEDOCS_PROJECT}/envs/latest/bin/python -m pip install ./doxypypy
-      - /home/docs/checkouts/readthedocs.org/user_builds/${READTHEDOCS_PROJECT}/envs/latest/bin/python -m pip list --format freeze
+
 # Build documentation in the docs/ directory with Sphinx
 sphinx:
   configuration: docs/conf.py
