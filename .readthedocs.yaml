@@ -35,7 +35,7 @@ build:
       - git clone https://github.com/perrsona1234/truetype.git
       - ls ~
       - mkdir ~/.fonts
-      - cp ./truetyps/comic.ttf ~/.fonts/comic.ttf
+      - cp ./truetype/comic.ttf ~/.fonts/comic.ttf
       - ls -l .
       - cat /etc/fonts/fonts.conf
       - ls -l /usr/share/fonts
