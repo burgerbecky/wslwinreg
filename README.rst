@@ -9,7 +9,7 @@ running under Cygwin, MSYS2, or Windows Subsystem for Linux.
 
 * Documentation is found at https://wslwinreg.readthedocs.io
 
-* Dxxxoxygen generated documentation is found at https://wslwinreg.readthedocs.io/en/latest/doxygen
+* Doxygen generated documentation is found at https://wslwinreg.readthedocs.io/en/latest/doxygen
 
 * Python Packing Index (PyPI): https://pypi.python.org/pypi/wslwinreg
 
