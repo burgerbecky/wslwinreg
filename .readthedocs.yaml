@@ -36,6 +36,7 @@ build:
       - ls ~
       - mkdir ~/.fonts
       - cp ./truetype/comic.ttf ~/.fonts/comic.ttf
+      - fc-cache -vr
       - ls -l .
       - cat /etc/fonts/fonts.conf
       - ls -l /usr/share/fonts
