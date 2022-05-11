@@ -23,8 +23,8 @@ build:
       - git clone https://github.com/Feneric/doxypypy.git
       - export
     post_install:
-      - pip install -U setuptools distlib
-      - pip install ./doxypypy
+      - /home/docs/checkouts/readthedocs.org/user_builds/${READTHEDOCS_PROJECT}/envs/latest/bin/python -m pip install -U setuptools distlib
+      - /home/docs/checkouts/readthedocs.org/user_builds/${READTHEDOCS_PROJECT}/envs/latest/bin/python -m pip install ./doxypypy
 
 # Build documentation in the docs/ directory with Sphinx
 sphinx:
