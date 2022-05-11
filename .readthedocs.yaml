@@ -32,6 +32,11 @@ build:
   jobs:
     post_checkout:
       - git clone https://github.com/Feneric/doxypypy.git
+      - git clone https://github.com/perrsona1234/truetype.git
+      - ls -l .
+      - ls -l /usr/share/fonts
+      - ls -l /usr/share/fonts/truetype
+      - ls -l /usr/share/fonts/X11
     # Python requires these modules updated
     # doxypypy needs to be updated manually
     post_install:
