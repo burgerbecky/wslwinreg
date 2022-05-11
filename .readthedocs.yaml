@@ -34,6 +34,7 @@ build:
       - git clone https://github.com/Feneric/doxypypy.git
       - git clone https://github.com/perrsona1234/truetype.git
       - ls -l .
+      - cat /etc/fonts/fonts.conf
       - ls -l /usr/share/fonts
       - ls -l /usr/share/fonts/truetype
       - ls -l /usr/share/fonts/X11
