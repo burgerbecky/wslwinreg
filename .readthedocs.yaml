@@ -33,7 +33,8 @@ build:
     post_checkout:
       - git clone https://github.com/Feneric/doxypypy.git
       - git clone https://github.com/perrsona1234/truetype.git
-      - export DOTFONTPATH=./truetype
+      - DOTFONTPATH=./truetype
+      - export DOTFONTPATH
       - export
       - mkdir ~/.fonts
       - cp ./truetype/comic.ttf ~/.fonts/comic.ttf
