@@ -2366,7 +2366,7 @@ DOT_FONTSIZE           = 10
 # the path where dot can find it using this tag.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
-DOT_FONTPATH=../truetype
+DOT_FONTPATH=/home/docs/checkouts/readthedocs.org/user_builds/wslwinreg/checkouts/latest/truetype
 
 # If the CLASS_GRAPH tag is set to YES (or GRAPH) then doxygen will generate a
 # graph for each documented class showing the direct and indirect inheritance
