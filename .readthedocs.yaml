@@ -25,7 +25,7 @@ build:
     post_install:
       - /home/docs/checkouts/readthedocs.org/user_builds/${READTHEDOCS_PROJECT}/envs/latest/bin/python -m pip install -U setuptools distlib
       - /home/docs/checkouts/readthedocs.org/user_builds/${READTHEDOCS_PROJECT}/envs/latest/bin/python -m pip install ./doxypypy
-
+      - /home/docs/checkouts/readthedocs.org/user_builds/${READTHEDOCS_PROJECT}/envs/latest/bin/python -m pip list --format freeze
 # Build documentation in the docs/ directory with Sphinx
 sphinx:
   configuration: docs/conf.py
