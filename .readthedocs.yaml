@@ -21,8 +21,8 @@ build:
   jobs:
     post_checkout:
       - git clone https://github.com/Feneric/doxypypy.git
+      - export
     post_install:
-      - python -m pip install -U pip
       - pip install -U setuptools distlib
       - pip install ./doxypypy
 
