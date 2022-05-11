@@ -2,6 +2,15 @@
 # Read the Docs configuration file
 # See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
 
+# wslwinreg needs doxypypy to build the docs. The version of doxypypy that's
+# in pypi.org is outdated, so the most recent version must be pulled from
+# github and installed manually.
+#
+# Since Python 3.9, commonmark, setuptools and distlib have issues so they
+# too need to be updated to the latest version to work. Thankfully, they
+# simply need to be pulled down using pip without any issues.
+#
+
 # Required
 version: 2
 
