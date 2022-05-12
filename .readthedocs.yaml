@@ -39,6 +39,16 @@ build:
     post_install:
       - /home/docs/checkouts/readthedocs.org/user_builds/${READTHEDOCS_PROJECT}/envs/latest/bin/python -m pip install -U setuptools distlib commonmark recommonmark
       - /home/docs/checkouts/readthedocs.org/user_builds/${READTHEDOCS_PROJECT}/envs/latest/bin/python -m pip install ./doxypypy
+      - which doxygen
+      - which python
+      - which dot
+      - curl https://www.doxygen.nl/files/doxygen-1.9.4.linux.bin.tar.gz --output doxygen-1.9.4.linux.bin.tar.gz
+      - tar -xf doxygen-1.9.4.linux.bin.tar.gz
+      - which doxygen
+      - echo ${PATH}
+      - PATH="$PWD/doxygen-1.9.4/bin:$PATH"
+      - export PATH
+      - which doxygen
 
 # Build documentation in the docs/ directory with Sphinx
 sphinx:
