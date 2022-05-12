@@ -28,18 +28,22 @@ build:
   tools:
     python: "3"
   apt_packages:
+    - doxygen
     - graphviz
   jobs:
     post_checkout:
       - git clone https://github.com/Feneric/doxypypy.git
       - git clone https://github.com/perrsona1234/truetype.git
-      - DOTFONTPATH="${PWD}/truetype"
-      - export DOTFONTPATH
-      - export
       - mkdir ~/.fonts
       - cp ./truetype/comic.ttf ~/.fonts/comic.ttf
       - cp ./truetype/comicbd.ttf ~/.fonts/comicbd.ttf
       - fc-cache -vr
+      - DOTFONTPATH="${PWD}/truetype"
+      - export DOTFONTPATH
+      - export
+      - ls .
+      - pwd
+      - cat docs/Doxyfile
     # Python requires these modules updated
     # doxypypy needs to be updated manually
     post_install:
