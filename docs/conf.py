@@ -282,7 +282,7 @@ def generate_doxygen_xml(app):
     except OSError as error:
         sys.stderr.write("doxygen execution failed: %s" % error)
 
-    # If on ReadTheDocs.org, copy to public folder
+    # If on ReadTheDocs.org, copy doxygen to public folder
     if _ON_RTD:
         try:
             retcode = subprocess.call(
