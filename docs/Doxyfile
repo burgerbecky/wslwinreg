@@ -2352,7 +2352,7 @@ DOT_NUM_THREADS        = 0
 # The default value is: Helvetica.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
-DOT_FONTNAME           = "Comic Sans MS"
+DOT_FONTNAME           = Helvetica
 
 # The DOT_FONTSIZE tag can be used to set the size (in points) of the font of
 # dot graphs.
@@ -2366,7 +2366,7 @@ DOT_FONTSIZE           = 10
 # the path where dot can find it using this tag.
 # This tag requires that the tag HAVE_DOT is set to YES.
 
-DOT_FONTPATH = /home/docs/checkouts/readthedocs.org/user_builds/wslwinreg/checkouts/latest/truetype
+DOT_FONTPATH           =
 
 # If the CLASS_GRAPH tag is set to YES (or GRAPH) then doxygen will generate a
 # graph for each documented class showing the direct and indirect inheritance
