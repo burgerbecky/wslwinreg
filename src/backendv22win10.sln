@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.452
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "backend", "backendv19win10.vcxproj", "{73315E38-D590-3729-A152-5AC258AA0C3B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "backend", "backendv22win10.vcxproj", "{73315E38-D590-3729-A152-5AC258AA0C3B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

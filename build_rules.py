@@ -23,7 +23,7 @@ from burger import import_py_script, run_command
 BUILDME_NO_RECURSE = False
 
 # ``buildme``` will build these files and folders first.
-BUILDME_DEPENDENCIES = 'src/backendv19win10.sln'
+BUILDME_DEPENDENCIES = 'src/backendv22win10.sln'
 
 # If set to True, ``cleanme -r``` will not parse directories in this folder.
 CLEANME_NO_RECURSE = False

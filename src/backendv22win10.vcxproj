@@ -43,7 +43,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
@@ -53,7 +53,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
@@ -63,7 +63,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
@@ -73,7 +73,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
@@ -103,7 +103,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|ARM'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
@@ -113,7 +113,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|ARM64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
@@ -128,8 +128,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>$(ProjectName)v19w32dbg</TargetName>
-    <IntDir>$(ProjectDir)temp\$(ProjectName)v19w32dbg\</IntDir>
+    <TargetName>$(ProjectName)v22w32dbg</TargetName>
+    <IntDir>$(ProjectDir)temp\$(ProjectName)v22w32dbg\</IntDir>
     <OutDir>$(ProjectDir)bin\</OutDir>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -137,24 +137,24 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>$(ProjectName)v19w64dbg</TargetName>
-    <IntDir>$(ProjectDir)temp\$(ProjectName)v19w64dbg\</IntDir>
+    <TargetName>$(ProjectName)v22w64dbg</TargetName>
+    <IntDir>$(ProjectDir)temp\$(ProjectName)v22w64dbg\</IntDir>
     <OutDir>$(ProjectDir)bin\</OutDir>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>$(ProjectName)v19wina32dbg</TargetName>
-    <IntDir>$(ProjectDir)temp\$(ProjectName)v19wina32dbg\</IntDir>
+    <TargetName>$(ProjectName)v22wina32dbg</TargetName>
+    <IntDir>$(ProjectDir)temp\$(ProjectName)v22wina32dbg\</IntDir>
     <OutDir>$(ProjectDir)bin\</OutDir>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <LinkIncremental>true</LinkIncremental>
-    <TargetName>$(ProjectName)v19wina64dbg</TargetName>
-    <IntDir>$(ProjectDir)temp\$(ProjectName)v19wina64dbg\</IntDir>
+    <TargetName>$(ProjectName)v22wina64dbg</TargetName>
+    <IntDir>$(ProjectDir)temp\$(ProjectName)v22wina64dbg\</IntDir>
     <OutDir>$(ProjectDir)bin\</OutDir>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -162,7 +162,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)-x86</TargetName>
-    <IntDir>$(ProjectDir)temp\$(ProjectName)v19w32ltc\</IntDir>
+    <IntDir>$(ProjectDir)temp\$(ProjectName)v22w32ltc\</IntDir>
     <OutDir>$(ProjectDir)..\wslwinreg\bin\</OutDir>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
@@ -171,7 +171,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)-x64</TargetName>
-    <IntDir>$(ProjectDir)temp\$(ProjectName)v19w64ltc\</IntDir>
+    <IntDir>$(ProjectDir)temp\$(ProjectName)v22w64ltc\</IntDir>
     <OutDir>$(ProjectDir)..\wslwinreg\bin\</OutDir>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -179,7 +179,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|ARM'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)-arm</TargetName>
-    <IntDir>$(ProjectDir)temp\$(ProjectName)v19wina32ltc\</IntDir>
+    <IntDir>$(ProjectDir)temp\$(ProjectName)v22wina32ltc\</IntDir>
     <OutDir>$(ProjectDir)..\wslwinreg\bin\</OutDir>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
@@ -187,7 +187,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|ARM64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)-arm64</TargetName>
-    <IntDir>$(ProjectDir)temp\$(ProjectName)v19wina64ltc\</IntDir>
+    <IntDir>$(ProjectDir)temp\$(ProjectName)v22wina64ltc\</IntDir>
     <OutDir>$(ProjectDir)..\wslwinreg\bin\</OutDir>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
