@@ -39,103 +39,103 @@ from ctypes import (
 
 ## Items to import on "from .common import *"
 __all__ = [
-    'builtins',
-    'PY2',
-    'IS_LINUX',
-    'IS_CYGWIN',
-    'IS_MSYS',
-    'IS_WSL',
-    'ERROR_SUCCESS',
-    'ERROR_FILE_NOT_FOUND',
-    'ERROR_MORE_DATA',
-    'HKEY_CLASSES_ROOT',
-    'HKEY_CURRENT_USER',
-    'HKEY_LOCAL_MACHINE',
-    'HKEY_USERS',
-    'HKEY_PERFORMANCE_DATA',
-    'HKEY_CURRENT_CONFIG',
-    'HKEY_DYN_DATA',
-    'KEY_QUERY_VALUE',
-    'KEY_SET_VALUE',
-    'KEY_CREATE_SUB_KEY',
-    'KEY_ENUMERATE_SUB_KEYS',
-    'KEY_NOTIFY',
-    'KEY_CREATE_LINK',
-    'KEY_WOW64_32KEY',
-    'KEY_WOW64_64KEY',
-    'KEY_WOW64_RES',
-    'KEY_WRITE',
-    'KEY_EXECUTE',
-    'KEY_READ',
-    'KEY_ALL_ACCESS',
-    'REG_OPTION_RESERVED',
-    'REG_OPTION_NON_VOLATILE',
-    'REG_OPTION_VOLATILE',
-    'REG_OPTION_CREATE_LINK',
-    'REG_OPTION_BACKUP_RESTORE',
-    'REG_OPTION_OPEN_LINK',
-    'REG_LEGAL_OPTION',
-    'REG_CREATED_NEW_KEY',
-    'REG_OPENED_EXISTING_KEY',
-    'REG_WHOLE_HIVE_VOLATILE',
-    'REG_REFRESH_HIVE',
-    'REG_NO_LAZY_FLUSH',
-    'REG_NOTIFY_CHANGE_NAME',
-    'REG_NOTIFY_CHANGE_ATTRIBUTES',
-    'REG_NOTIFY_CHANGE_LAST_SET',
-    'REG_NOTIFY_CHANGE_SECURITY',
-    'REG_LEGAL_CHANGE_FILTER',
-    'REG_NONE',
-    'REG_SZ',
-    'REG_EXPAND_SZ',
-    'REG_BINARY',
-    'REG_DWORD',
-    'REG_DWORD_LITTLE_ENDIAN',
-    'REG_DWORD_BIG_ENDIAN',
-    'REG_LINK',
-    'REG_MULTI_SZ',
-    'REG_RESOURCE_LIST',
-    'REG_FULL_RESOURCE_DESCRIPTOR',
-    'REG_RESOURCE_REQUIREMENTS_LIST',
-    'REG_QWORD',
-    'REG_QWORD_LITTLE_ENDIAN',
-    'FORMAT_MESSAGE_ALLOCATE_BUFFER',
-    'FORMAT_MESSAGE_IGNORE_INSERTS',
-    'FORMAT_MESSAGE_FROM_STRING',
-    'FORMAT_MESSAGE_FROM_HMODULE',
-    'FORMAT_MESSAGE_FROM_SYSTEM',
-    'FORMAT_MESSAGE_ARGUMENT_ARRAY',
-    'FORMAT_MESSAGE_MAX_WIDTH_MASK',
-    'LANG_NEUTRAL',
-    'SUBLANG_DEFAULT',
-    'LPCVOID',
-    'LPVOID',
-    'BOOL',
-    'WORD',
-    'DWORD',
-    'PDWORD',
-    'LPDWORD',
-    'QWORD',
-    'PQWORD',
-    'LPQWORD',
-    'LONG',
-    'PLONG',
-    'PBYTE',
-    'LPBYTE',
-    'LPSTR',
-    'LPWSTR',
-    'LPCWSTR',
-    'HANDLE',
-    'HKEY',
-    'PHKEY',
-    'HLOCAL',
-    'REGSAM',
-    'FILETIME',
-    'PFILETIME',
-    'winerror_to_errno',
-    'convert_to_utf16',
-    'to_registry_bytes',
-    'from_registry_bytes'
+    "builtins",
+    "PY2",
+    "IS_LINUX",
+    "IS_CYGWIN",
+    "IS_MSYS",
+    "IS_WSL",
+    "ERROR_SUCCESS",
+    "ERROR_FILE_NOT_FOUND",
+    "ERROR_MORE_DATA",
+    "HKEY_CLASSES_ROOT",
+    "HKEY_CURRENT_USER",
+    "HKEY_LOCAL_MACHINE",
+    "HKEY_USERS",
+    "HKEY_PERFORMANCE_DATA",
+    "HKEY_CURRENT_CONFIG",
+    "HKEY_DYN_DATA",
+    "KEY_QUERY_VALUE",
+    "KEY_SET_VALUE",
+    "KEY_CREATE_SUB_KEY",
+    "KEY_ENUMERATE_SUB_KEYS",
+    "KEY_NOTIFY",
+    "KEY_CREATE_LINK",
+    "KEY_WOW64_32KEY",
+    "KEY_WOW64_64KEY",
+    "KEY_WOW64_RES",
+    "KEY_WRITE",
+    "KEY_EXECUTE",
+    "KEY_READ",
+    "KEY_ALL_ACCESS",
+    "REG_OPTION_RESERVED",
+    "REG_OPTION_NON_VOLATILE",
+    "REG_OPTION_VOLATILE",
+    "REG_OPTION_CREATE_LINK",
+    "REG_OPTION_BACKUP_RESTORE",
+    "REG_OPTION_OPEN_LINK",
+    "REG_LEGAL_OPTION",
+    "REG_CREATED_NEW_KEY",
+    "REG_OPENED_EXISTING_KEY",
+    "REG_WHOLE_HIVE_VOLATILE",
+    "REG_REFRESH_HIVE",
+    "REG_NO_LAZY_FLUSH",
+    "REG_NOTIFY_CHANGE_NAME",
+    "REG_NOTIFY_CHANGE_ATTRIBUTES",
+    "REG_NOTIFY_CHANGE_LAST_SET",
+    "REG_NOTIFY_CHANGE_SECURITY",
+    "REG_LEGAL_CHANGE_FILTER",
+    "REG_NONE",
+    "REG_SZ",
+    "REG_EXPAND_SZ",
+    "REG_BINARY",
+    "REG_DWORD",
+    "REG_DWORD_LITTLE_ENDIAN",
+    "REG_DWORD_BIG_ENDIAN",
+    "REG_LINK",
+    "REG_MULTI_SZ",
+    "REG_RESOURCE_LIST",
+    "REG_FULL_RESOURCE_DESCRIPTOR",
+    "REG_RESOURCE_REQUIREMENTS_LIST",
+    "REG_QWORD",
+    "REG_QWORD_LITTLE_ENDIAN",
+    "FORMAT_MESSAGE_ALLOCATE_BUFFER",
+    "FORMAT_MESSAGE_IGNORE_INSERTS",
+    "FORMAT_MESSAGE_FROM_STRING",
+    "FORMAT_MESSAGE_FROM_HMODULE",
+    "FORMAT_MESSAGE_FROM_SYSTEM",
+    "FORMAT_MESSAGE_ARGUMENT_ARRAY",
+    "FORMAT_MESSAGE_MAX_WIDTH_MASK",
+    "LANG_NEUTRAL",
+    "SUBLANG_DEFAULT",
+    "LPCVOID",
+    "LPVOID",
+    "BOOL",
+    "WORD",
+    "DWORD",
+    "PDWORD",
+    "LPDWORD",
+    "QWORD",
+    "PQWORD",
+    "LPQWORD",
+    "LONG",
+    "PLONG",
+    "PBYTE",
+    "LPBYTE",
+    "LPSTR",
+    "LPWSTR",
+    "LPCWSTR",
+    "HANDLE",
+    "HKEY",
+    "PHKEY",
+    "HLOCAL",
+    "REGSAM",
+    "FILETIME",
+    "PFILETIME",
+    "winerror_to_errno",
+    "convert_to_utf16",
+    "to_registry_bytes",
+    "from_registry_bytes"
 ]
 
 ## Type long for Python 2 compatibility
@@ -144,7 +144,7 @@ try:
 except NameError:
     # Fake it for Python 3
     long = int
-    __all__.append('long')
+    __all__.append("long")
 
 ## Type basestring for Python 2 compatibility
 try:
@@ -152,7 +152,7 @@ try:
 except NameError:
     # Fake it for Python 3
     basestring = str
-    __all__.append('basestring')
+    __all__.append("basestring")
 
 # Force Python2 to use builtins
 try:
@@ -165,16 +165,16 @@ except ImportError:
 PY2 = sys.version_info[0] == 2
 
 ## Running on linux?
-IS_LINUX = sys.platform.startswith('linux')
+IS_LINUX = sys.platform.startswith("linux")
 
 ## Running on Cygwin
-IS_CYGWIN = sys.platform.startswith('cygwin')
+IS_CYGWIN = sys.platform.startswith("cygwin")
 
 ## Running on MSYS
-IS_MSYS = sys.platform.startswith('msys')
+IS_MSYS = sys.platform.startswith("msys")
 
 ## Running on Windows Subsystem for Linux
-IS_WSL = IS_LINUX and 'icrosoft' in platform.platform()
+IS_WSL = IS_LINUX and "icrosoft" in platform.platform()
 
 ## The operation completed successfully.
 ERROR_SUCCESS = 0x00000000
@@ -601,7 +601,7 @@ def convert_to_utf16(input_string):
     """
     if PY2 and isinstance(input_string, str):
         input_string = input_string.decode(getpreferredencoding())
-    return input_string.encode('utf-16-le')
+    return input_string.encode("utf-16-le")
 
 ########################################
 
@@ -625,19 +625,19 @@ def to_registry_bytes(value, typ):
     if typ == REG_DWORD:
         if value is None:
             value = 0
-        return create_string_buffer(pack('I', value), sizeof(c_uint))
+        return create_string_buffer(pack("I", value), sizeof(c_uint))
 
     # 64 bit integer?
     if typ == REG_QWORD:
         if value is None:
             value = 0
-        return create_string_buffer(pack('Q', value), sizeof(QWORD))
+        return create_string_buffer(pack("Q", value), sizeof(QWORD))
 
     # Simple string?
     if typ in (REG_SZ, REG_EXPAND_SZ):
         # Convert None to empty string
         if value is None:
-            value = u''
+            value = u""
 
         # Sanity check
         if not isinstance(value, basestring):
@@ -651,7 +651,7 @@ def to_registry_bytes(value, typ):
             value = []
 
         # Sanity check
-        if not hasattr(value, '__iter__'):
+        if not hasattr(value, "__iter__"):
             raise ValueError("Value must be a sequence or iterable.")
 
         result = []
@@ -661,14 +661,14 @@ def to_registry_bytes(value, typ):
                 raise ValueError("Element %d must be a string or a unicode "
                                  "object." % count)
             if item is None:
-                result.append(convert_to_utf16(u''))
+                result.append(convert_to_utf16(u""))
             else:
                 result.append(convert_to_utf16(item))
             count += 1
         # Windows expects an empty string at the end.
-        result.append(convert_to_utf16(u''))
+        result.append(convert_to_utf16(u""))
 
-        result = b'\x00\x00'.join(result)
+        result = b"\x00\x00".join(result)
         return create_string_buffer(result, len(result))
 
     # Assume it's REG_BINARY at this point
@@ -683,7 +683,7 @@ def to_registry_bytes(value, typ):
         return create_string_buffer(value, len(value))
     except TypeError:
         # pylint: disable=raise-missing-from
-        raise TypeError("Objects of type '%s' can not be used as "
+        raise TypeError("Objects of type \"%s\" can not be used as "
                         "binary registry values" % type(value))
 
 ########################################
@@ -706,24 +706,24 @@ def from_registry_bytes(input_data, input_size, typ):
     # pylint: disable=too-many-branches
 
     # If the input is a c_type, pull in the value
-    if hasattr(input_size, 'value'):
+    if hasattr(input_size, "value"):
         input_size = input_size.value
 
     # If the data type is a c_type, pull in the value
-    if hasattr(typ, 'value'):
+    if hasattr(typ, "value"):
         typ = typ.value
 
     # 32 bit integer?
     if typ == REG_DWORD:
         if input_size == 0:
             return long(0)
-        return unpack_from('I', input_data)[0]
+        return unpack_from("I", input_data)[0]
 
     # 64 bit integer?
     if typ == REG_QWORD:
         if input_size == 0:
             return long(0)
-        return unpack_from('Q', input_data)[0]
+        return unpack_from("Q", input_data)[0]
 
     # Single UTF-16 string?
     if typ in (REG_SZ, REG_EXPAND_SZ):
@@ -732,7 +732,7 @@ def from_registry_bytes(input_data, input_size, typ):
             input_size -= 1
 
         # Sanity check on buffer size
-        if hasattr(input_data, 'raw'):
+        if hasattr(input_data, "raw"):
             buf = input_data.raw
         else:
             buf = input_data
@@ -740,10 +740,10 @@ def from_registry_bytes(input_data, input_size, typ):
             buf = buf[:input_size]
 
         # Convert to preferred encoding
-        buf = buf.decode('utf-16-le')
+        buf = buf.decode("utf-16-le")
         # If there is a null character in the string,
         # terminate the string there.
-        input_size = buf.find('\0')
+        input_size = buf.find("\0")
         if input_size != -1:
             return buf[:input_size]
         return buf
@@ -755,7 +755,7 @@ def from_registry_bytes(input_data, input_size, typ):
             input_size -= 1
 
         # Sanity check on the buffer size
-        if hasattr(input_data, 'raw'):
+        if hasattr(input_data, "raw"):
             buf = input_data.raw
         else:
             buf = input_data
@@ -763,16 +763,16 @@ def from_registry_bytes(input_data, input_size, typ):
             buf = buf[:input_size]
 
         # Convert the entire string to preferred encoding.
-        buf = buf.decode('utf-16-le')
+        buf = buf.decode("utf-16-le")
         # Remove trailing zero, if any.
         if len(buf) == 0:
             return []
 
-        if buf[-1] == '\0':
+        if buf[-1] == "\0":
             buf = buf[:-1]
 
         # Split the string by nulls.
-        return buf.split('\0')
+        return buf.split("\0")
 
     # Assume it's a binary data type, return as is.
     if not input_size:

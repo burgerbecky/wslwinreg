@@ -23,7 +23,7 @@ from burger import import_py_script, run_command
 BUILDME_NO_RECURSE = False
 
 # ``buildme``` will build these files and folders first.
-BUILDME_DEPENDENCIES = 'src/backendv22win10.sln'
+BUILDME_DEPENDENCIES = "src/backendv22win10.sln"
 
 # If set to True, ``cleanme -r``` will not parse directories in this folder.
 CLEANME_NO_RECURSE = False
@@ -80,11 +80,11 @@ def clean(working_directory):
 
     # The function exists in setup.py.
     # It can be manually invoked with "setup.py clean"
-    setup = import_py_script(os.path.join(working_directory, 'setup.py'))
+    setup = import_py_script(os.path.join(working_directory, "setup.py"))
     setup.clean(working_directory)
     return 0
 
 
 # If called as a command line and not a class, perform the build
 if __name__ == "__main__":
-    sys.exit(build(os.path.dirname(os.path.abspath(__file__)), 'all'))
+    sys.exit(build(os.path.dirname(os.path.abspath(__file__)), "all"))

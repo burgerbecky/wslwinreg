@@ -63,31 +63,31 @@ from .common import IS_CYGWIN, IS_MSYS, IS_WSL, ERROR_SUCCESS, \
     PFILETIME, SUBLANG_DEFAULT
 
 ## Numeric version
-__numversion__ = (1, 0, 6)
+__numversion__ = (1, 0, 7)
 
 ## Current version of the library
-__version__ = '.'.join([str(num) for num in __numversion__])
+__version__ = ".".join([str(num) for num in __numversion__])
 
 ## Author's name
-__author__ = 'Rebecca Ann Heineman'
+__author__ = "Rebecca Ann Heineman"
 
 ## Name of the module
-__title__ = 'wslwinreg'
+__title__ = "wslwinreg"
 
 ## Summary of the module's use
-__summary__ = 'Drop in replacement for winreg for Cygwin, MSYS2 and WSL'
+__summary__ = "Drop in replacement for winreg for Cygwin, MSYS2 and WSL"
 
 ## Home page
-__uri__ = 'http://wslwinreg.readthedocs.io'
+__uri__ = "http://wslwinreg.readthedocs.io"
 
 ## Email address for bug reports
-__email__ = 'becky@burgerbecky.com'
+__email__ = "becky@burgerbecky.com"
 
 ## Type of license used for distribution
-__license__ = 'MIT License'
+__license__ = "MIT License"
 
 ## Copyright owner
-__copyright__ = 'Copyright 2020-2022 Rebecca Ann Heineman'
+__copyright__ = "Copyright 2020-2022 Rebecca Ann Heineman"
 
 # Load in the proper implementation based on the
 # underlying operating system
@@ -233,7 +233,7 @@ class WinRegKey(object):
         value, value_type = QueryValueEx(self.key, value_name)
         if value_type == REG_SZ:
             # Failsafe, truncate at null
-            index = value.find('\0')
+            index = value.find("\0")
             if index != -1:
                 value = value[:index]
         elif value_type == REG_EXPAND_SZ:

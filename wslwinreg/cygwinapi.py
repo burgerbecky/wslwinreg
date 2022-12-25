@@ -41,7 +41,7 @@ except OSError:
     cdll.advapi32 = CDLL("advapi32.dll", use_errno=True)
 
     ## Loaded instance of the Windows dll version
-    cdll.version = CDLL('version.dll', use_errno=True)
+    cdll.version = CDLL("version.dll", use_errno=True)
 
 ## Type long for Python 2 compatibility
 try:
@@ -258,7 +258,7 @@ def winerror_to_string(winerror):
     LocalFree(buf)
 
     # Clean up the string before returning
-    return re_sub(r'[\s.]*$', '', result)
+    return re_sub(r"[\s.]*$", "", result)
 
 ########################################
 
@@ -1310,13 +1310,13 @@ def convert_to_windows_path(path_name):
     """
 
     # Network drive name?
-    if path_name.startswith('\\\\') or ':' in path_name:
+    if path_name.startswith("\\\\") or ":" in path_name:
         return path_name
 
     # The tool doesn't process ~ properly, help it by preprocessing here.
-    args = ('cygpath',
-        '-a',
-        '-w',
+    args = ("cygpath",
+        "-a",
+        "-w",
         os.path.abspath(os.path.expanduser(path_name))
             )
 
@@ -1349,11 +1349,11 @@ def convert_from_windows_path(path_name):
     """
 
     # Network drive name?
-    if path_name[0] in ('~', '/'):
+    if path_name[0] in ("~", "/"):
         return path_name
 
     # Create command list
-    args = ('cygpath', '-a', '-u', path_name)
+    args = ("cygpath", "-a", "-u", path_name)
 
     # Perform the conversion
     tempfp = subprocess.Popen(args, stdout=subprocess.PIPE,
@@ -1373,15 +1373,15 @@ def get_file_info(path_name, string_name):
     r"""
     Extract information from a windows exe file version resource.
 
-    Given a windows exe file, extract the 'StringFileInfo' resource and
+    Given a windows exe file, extract the "StringFileInfo" resource and
     parse out the data chunk named by string_name.
 
     Full list of resource names:
         https://docs.microsoft.com/en-us/windows/desktop/menurc/stringfileinfo-block
 
     Examples:
-        file_version = get_file_info('devenv.exe', 'FileVersion')
-        product_version =  get_file_info('devenv.exe', 'ProductVersion')
+        file_version = get_file_info("devenv.exe", "FileVersion")
+        product_version =  get_file_info("devenv.exe", "ProductVersion")
 
     Args:
         path_name: Name of the windows file.
@@ -1415,7 +1415,7 @@ def get_file_info(path_name, string_name):
         length = LONG()
         VerQueryValueW(
             res_data,
-            '\\VarFileInfo\\Translation',
+            "\\VarFileInfo\\Translation",
             byref(record),
             byref(length))
         # Was a codepage found?
@@ -1424,14 +1424,14 @@ def get_file_info(path_name, string_name):
             # Parse out the first found codepage (It's the default
             # language) it's in the form of two 16 bit shorts
             codepages = array.array(
-                'H', string_at(
+                "H", string_at(
                     record.value, length.value))
 
             # Extract information from the version using unicode and
             # the proper codepage
             if VerQueryValueW(
                     res_data,
-                    '\\StringFileInfo\\{0:04x}{1:04x}\\{2}'.format(
+                    "\\StringFileInfo\\{0:04x}{1:04x}\\{2}".format(
                         codepages[0],
                         codepages[1],
                         string_name),

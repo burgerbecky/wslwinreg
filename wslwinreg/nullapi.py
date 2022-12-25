@@ -18,7 +18,7 @@ from .common import KEY_WRITE, KEY_WOW64_64KEY, KEY_READ
 
 ## Shared ``NotImplementedError`` for this module
 _NOT_IMPL = NotImplementedError(
-    'Only supported under Cygwin, MSYS2, or Windows Subsystem for Linux')
+    "Only supported under Cygwin, MSYS2, or Windows Subsystem for Linux")
 
 ########################################
 

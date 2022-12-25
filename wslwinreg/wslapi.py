@@ -125,23 +125,23 @@ class Commands(IntEnum):
     GET_FILE_INFO = 25
 
 ## Loopback address
-_LOCALHOST = '127.0.0.1'
+_LOCALHOST = "127.0.0.1"
 
 ## Transmission buffer size
 _BUFFER_SIZE = 1024
 
 ## Directory for the windows executables
-_WIN_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'bin')
+_WIN_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bin")
 
 ## Set the exe suffix for the CPU in use
 _EXESUFFIX = machine = platform.machine().lower()
 
 # Use a common suffix for amd64 instruction sets
-if _EXESUFFIX in ('amd64', 'x86_64', 'em64t'):
-    _EXESUFFIX = 'x64'
+if _EXESUFFIX in ("amd64", "x86_64", "em64t"):
+    _EXESUFFIX = "x64"
 
 ## Patch to the executable to bridge
-_WIN_EXE = os.path.join(_WIN_DIR, 'backend-' + _EXESUFFIX + '.exe')
+_WIN_EXE = os.path.join(_WIN_DIR, "backend-" + _EXESUFFIX + ".exe")
 
 # Make sure it's executable
 
@@ -166,7 +166,7 @@ _LISTEN_SOCKET.listen(1)
 try:
     ## Popen object for the bridge executable
     _EXEC_FP = subprocess.Popen(
-        (_WIN_EXE, '-p', str(_LISTEN_PORT)),
+        (_WIN_EXE, "-p", str(_LISTEN_PORT)),
         cwd=_WIN_DIR, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
         universal_newlines=True)
 except OSError:
@@ -248,7 +248,7 @@ def handleLRESULT():
     # Get the LRESULT
     data = _CONNECTION_SOCKET.recv(4)
     # Error code
-    return_code = struct.unpack('<I', data)[0]
+    return_code = struct.unpack("<I", data)[0]
     if return_code:
 
         # Parse out the utf-8 error string
@@ -275,15 +275,15 @@ def create_string_buffer(temp_string, is_binary=False):
     # Ensure it's a string
     if temp_string:
         if not is_binary:
-            temp_string = temp_string.encode('utf-8')
+            temp_string = temp_string.encode("utf-8")
     else:
-        temp_string = b''
+        temp_string = b""
 
     temp_string_length = len(temp_string)
 
     # Get the length
     buffer = struct.pack(
-        '<I',
+        "<I",
         temp_string_length)
 
     if not temp_string_length:
@@ -305,7 +305,7 @@ def recv_string(convert_to_string=True):
 
     # Get the result string length
     data = _CONNECTION_SOCKET.recv(4)
-    new_string_length = struct.unpack('<I', data)[0]
+    new_string_length = struct.unpack("<I", data)[0]
 
     # Get the result string
     if new_string_length:
@@ -322,10 +322,10 @@ def recv_string(convert_to_string=True):
             del packet
         data = bytes(data)
     else:
-        data = b''
+        data = b""
 
     if convert_to_string:
-        data = data.decode('utf-8')
+        data = data.decode("utf-8")
     return data
 
 ########################################
@@ -338,7 +338,7 @@ def _RegCloseKey(hkey):
 
     # Send the command and a QWORD of the pointer
     buffer = struct.pack(
-        '<BQ', Commands.CLOSE_KEY.value,
+        "<BQ", Commands.CLOSE_KEY.value,
         hkey)
     _CONNECTION_SOCKET.sendall(buffer)
 
@@ -591,7 +591,7 @@ def ConnectRegistry(computer_name, key):
 
     test_string(computer_name)
     buffer = struct.pack(
-        '<BQ',
+        "<BQ",
         Commands.CONNECT_REGISTRY.value,
         PyHKEY.make(key).hkey)
 
@@ -604,7 +604,7 @@ def ConnectRegistry(computer_name, key):
     # Restore the proper timeout
     _CONNECTION_SOCKET.settimeout(3.0)
     handleLRESULT()
-    return PyHKEY.make(struct.unpack('<Q', data)[0])
+    return PyHKEY.make(struct.unpack("<Q", data)[0])
 
 ########################################
 
@@ -630,7 +630,7 @@ def CreateKey(key, sub_key):
     test_string(sub_key)
 
     buffer = struct.pack(
-        '<BQ',
+        "<BQ",
         Commands.CREATE_KEY.value,
         PyHKEY.make(key).hkey)
 
@@ -638,7 +638,7 @@ def CreateKey(key, sub_key):
 
     data = _CONNECTION_SOCKET.recv(8)
     handleLRESULT()
-    return PyHKEY.make(struct.unpack('<Q', data)[0])
+    return PyHKEY.make(struct.unpack("<Q", data)[0])
 
 ########################################
 
@@ -668,7 +668,7 @@ def CreateKeyEx(key, sub_key, reserved=0, access=KEY_WRITE):
     test_string(sub_key)
 
     buffer = struct.pack(
-        '<BQII',
+        "<BQII",
         Commands.CREATE_KEY_EX.value,
         PyHKEY.make(key).hkey, reserved, access)
 
@@ -676,7 +676,7 @@ def CreateKeyEx(key, sub_key, reserved=0, access=KEY_WRITE):
 
     data = _CONNECTION_SOCKET.recv(8)
     handleLRESULT()
-    return PyHKEY.make(struct.unpack('<Q', data)[0])
+    return PyHKEY.make(struct.unpack("<Q", data)[0])
 
 ########################################
 
@@ -692,7 +692,7 @@ def DeleteKey(key, sub_key):
     test_string(sub_key)
 
     buffer = struct.pack(
-        '<BQ',
+        "<BQ",
         Commands.DELETE_KEY.value,
         PyHKEY.make(key).hkey)
 
@@ -732,7 +732,7 @@ def DeleteKeyEx(key, sub_key, access=KEY_WOW64_64KEY, reserved=0):
     test_string(sub_key)
 
     buffer = struct.pack(
-        '<BQII',
+        "<BQII",
         Commands.DELETE_KEY_EX.value,
         PyHKEY.make(key).hkey, reserved, access)
 
@@ -757,7 +757,7 @@ def DeleteValue(key, value):
     test_string(value)
 
     buffer = struct.pack(
-        '<BQ',
+        "<BQ",
         Commands.DELETE_VALUE.value,
         PyHKEY.make(key).hkey)
 
@@ -785,7 +785,7 @@ def EnumKey(key, index):
     """
 
     buffer = struct.pack(
-        '<BQI',
+        "<BQI",
         Commands.ENUM_KEY.value,
         PyHKEY.make(key).hkey, index)
 
@@ -825,7 +825,7 @@ def EnumValue(key, index):
     """
 
     buffer = struct.pack(
-        '<BQI',
+        "<BQI",
         Commands.ENUM_VALUE.value,
         PyHKEY.make(key).hkey, index)
 
@@ -838,7 +838,7 @@ def EnumValue(key, index):
 
     # Handle the error
     handleLRESULT()
-    typ = struct.unpack('<I', data)[0]
+    typ = struct.unpack("<I", data)[0]
     return (new_string,
             from_registry_bytes(new_data, len(new_data), typ),
             typ)
@@ -865,7 +865,7 @@ def ExpandEnvironmentStrings(str):
 
     # Send the command
     buffer = struct.pack(
-        '<B',
+        "<B",
         Commands.EXPAND_ENVIRONMENTSTRINGS.value)
 
     # Append the string to the buffer
@@ -905,7 +905,7 @@ def FlushKey(key):
 
     # Send the command and a QWORD of the pointer
     buffer = struct.pack(
-        '<BQ',
+        "<BQ",
         Commands.FLUSH_KEY.value,
         PyHKEY.make(key).hkey)
     _CONNECTION_SOCKET.sendall(buffer)
@@ -947,7 +947,7 @@ def LoadKey(key, sub_key, file_name):
 
     test_string(sub_key)
     buffer = struct.pack(
-        '<BQ',
+        "<BQ",
         Commands.LOAD_KEY.value,
         PyHKEY.make(key).hkey)
 
@@ -983,7 +983,7 @@ def OpenKey(key, sub_key, reserved=0, access=KEY_READ):
 
     test_string(sub_key)
     buffer = struct.pack(
-        '<BQII',
+        "<BQII",
         Commands.OPEN_KEY.value,
         PyHKEY.make(key).hkey,
         reserved,
@@ -993,7 +993,7 @@ def OpenKey(key, sub_key, reserved=0, access=KEY_READ):
 
     data = _CONNECTION_SOCKET.recv(8)
     handleLRESULT()
-    return PyHKEY.make(struct.unpack('<Q', data)[0])
+    return PyHKEY.make(struct.unpack("<Q", data)[0])
 
 ########################################
 
@@ -1045,14 +1045,14 @@ def QueryInfoKey(key):
 
     # Send the command and a QWORD of the pointer
     buffer = struct.pack(
-        '<BQ',
+        "<BQ",
         Commands.QUERY_INFO_KEY.value,
         PyHKEY.make(key).hkey)
     _CONNECTION_SOCKET.sendall(buffer)
 
     data = _CONNECTION_SOCKET.recv(4 + 4 + 8)
     handleLRESULT()
-    return struct.unpack('<IIQ', data)
+    return struct.unpack("<IIQ", data)
 
 ########################################
 
@@ -1079,7 +1079,7 @@ def QueryValue(key, sub_key):
 
     test_string(sub_key)
     buffer = struct.pack(
-        '<BQ',
+        "<BQ",
         Commands.QUERY_VALUE.value,
         PyHKEY.make(key).hkey)
 
@@ -1116,7 +1116,7 @@ def QueryValueEx(key, value_name):
 
     test_string(value_name)
     buffer = struct.pack(
-        '<BQ',
+        "<BQ",
         Commands.QUERY_VALUE_EX.value,
         PyHKEY.make(key).hkey)
 
@@ -1127,7 +1127,7 @@ def QueryValueEx(key, value_name):
 
     # Restore the proper timeout
     handleLRESULT()
-    typ = struct.unpack('<I', data)[0]
+    typ = struct.unpack("<I", data)[0]
     return (from_registry_bytes(new_data, len(new_data), typ),
             typ)
 
@@ -1160,7 +1160,7 @@ def SaveKey(key, file_name):
 
     test_string(file_name)
     buffer = struct.pack(
-        '<BQ',
+        "<BQ",
         Commands.SAVE_KEY.value,
         PyHKEY.make(key).hkey)
 
@@ -1206,7 +1206,7 @@ def SetValue(key, sub_key, type, value):
         raise TypeError("Type must be wslwinreg.REG_SZ")
 
     buffer = struct.pack(
-        '<BQ',
+        "<BQ",
         Commands.SET_VALUE.value,
         PyHKEY.make(key).hkey)
 
@@ -1250,7 +1250,7 @@ def SetValueEx(key, value_name, reserved, type, value):
     test_string(value_name)
     temp_buf = to_registry_bytes(value, type)
     buffer = struct.pack(
-        '<BQI',
+        "<BQI",
         Commands.SET_VALUE_EX.value,
         PyHKEY.make(key).hkey,
         type)
@@ -1285,7 +1285,7 @@ def DisableReflectionKey(key):
 
     # Send the command and a QWORD of the pointer
     buffer = struct.pack(
-        '<BQ',
+        "<BQ",
         Commands.DISABLE_REFLECTION_KEY.value,
         PyHKEY.make(key).hkey)
     _CONNECTION_SOCKET.sendall(buffer)
@@ -1310,7 +1310,7 @@ def EnableReflectionKey(key):
 
     # Send the command and a QWORD of the pointer
     buffer = struct.pack(
-        '<BQ',
+        "<BQ",
         Commands.ENABLE_REFLECTION_KEY.value,
         PyHKEY.make(key).hkey)
     _CONNECTION_SOCKET.sendall(buffer)
@@ -1333,7 +1333,7 @@ def QueryReflectionKey(key):
 
     # Send the command and a QWORD of the pointer
     buffer = struct.pack(
-        '<BQ',
+        "<BQ",
         Commands.QUERY_REFLECTION_KEY.value,
         PyHKEY.make(key).hkey)
     _CONNECTION_SOCKET.sendall(buffer)
@@ -1342,7 +1342,7 @@ def QueryReflectionKey(key):
     data = _CONNECTION_SOCKET.recv(1)
     handleLRESULT()
     # Error code
-    return_code = struct.unpack('<B', data)[0]
+    return_code = struct.unpack("<B", data)[0]
     return return_code != 0
 
 ########################################
@@ -1363,13 +1363,13 @@ def convert_to_windows_path(path_name):
     """
 
     # Network drive name?
-    if path_name.startswith('\\\\') or ':' in path_name:
+    if path_name.startswith("\\\\") or ":" in path_name:
         return path_name
 
     # The tool doesn't process ~ properly, help it by preprocessing here.
-    args = ('wslpath',
-        '-a',
-        '-w',
+    args = ("wslpath",
+        "-a",
+        "-w",
         os.path.abspath(os.path.expanduser(path_name))
             )
 
@@ -1402,11 +1402,11 @@ def convert_from_windows_path(path_name):
     """
 
     # Network drive name?
-    if path_name[0] in ('~', '/'):
+    if path_name[0] in ("~", "/"):
         return path_name
 
     # Create command list
-    args = ('wslpath', '-a', '-u', path_name)
+    args = ("wslpath", "-a", "-u", path_name)
 
     # Perform the conversion
     tempfp = subprocess.Popen(args, stdout=subprocess.PIPE,
@@ -1426,15 +1426,15 @@ def get_file_info(path_name, string_name):
     r"""
     Extract information from a windows exe file version resource.
 
-    Given a windows exe file, extract the 'StringFileInfo' resource and
+    Given a windows exe file, extract the "StringFileInfo" resource and
     parse out the data chunk named by string_name.
 
     Full list of resource names:
         https://docs.microsoft.com/en-us/windows/desktop/menurc/stringfileinfo-block
 
     Examples:
-        file_version = get_file_info('devenv.exe', 'FileVersion')
-        product_version =  get_file_info('devenv.exe', 'ProductVersion')
+        file_version = get_file_info("devenv.exe", "FileVersion")
+        product_version =  get_file_info("devenv.exe", "ProductVersion")
 
     Args:
         path_name: Name of the windows file.
@@ -1453,7 +1453,7 @@ def get_file_info(path_name, string_name):
 
     # Send the command and the strings
     buffer = struct.pack(
-        '<B',
+        "<B",
         Commands.GET_FILE_INFO.value)
 
     _CONNECTION_SOCKET.sendall(
