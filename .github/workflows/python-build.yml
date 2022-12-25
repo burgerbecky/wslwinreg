@@ -22,6 +22,7 @@ jobs:
           - "windows-2019-py38"
           - "windows-2019-py39"
           - "windows-2019-py310"
+          - "windows-2019-py311"
         # - "windows-2019-pypy2"
         # - "windows-2019-pypy3"
         # Specific data for each version being built
@@ -55,6 +56,10 @@ jobs:
             python: "3.10"
             os: "windows-2019"
             tox_env: "py310"
+          - name: "windows-2019-py311"
+            python: "3.11"
+            os: "windows-2019"
+            tox_env: "py311"
           #- name: "windows-2019-pypy2"
           #  python: "pypy2"
           #  os: "windows-2019"
