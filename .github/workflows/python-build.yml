@@ -59,7 +59,7 @@ jobs:
             python: "3.12"
             os: "windows-2022"
             tox_env: "py312"
-          steps:
+    steps:
       - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v2
