@@ -173,8 +173,8 @@ except OSError:
     raise ImportError("Windows executable {} for bridging not found.".format(
         _WIN_EXE))
 
-# At thie point, the exe had started, connect to it.
-_LISTEN_SOCKET.settimeout(3.0)
+# At this point, the exe had started, connect to it.
+_LISTEN_SOCKET.settimeout(10.0)
 try:
     ## @var _CONNECTION_ADDR
     # Connection address
