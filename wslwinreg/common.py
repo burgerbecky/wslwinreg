@@ -490,6 +490,7 @@ class FILETIME(Structure):
         None
     """
 
+    ## FILETIME fields from Windows
     _fields_ = [("low", DWORD), ("high", DWORD)]
 
 

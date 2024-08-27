@@ -18,7 +18,7 @@ import array
 import os.path
 import subprocess
 from ctypes import cdll, create_unicode_buffer, c_void_p, c_ulong, byref, \
-    cast, sizeof, create_string_buffer, wstring_at, string_at
+    cast, sizeof, create_string_buffer, wstring_at, string_at, RTLD_LOCAL
 
 from .common import PY2, builtins, ERROR_SUCCESS, ERROR_FILE_NOT_FOUND, \
     ERROR_MORE_DATA, KEY_WOW64_64KEY, KEY_WRITE, KEY_READ, REG_SZ, \
@@ -35,13 +35,13 @@ except OSError:
     from ctypes import CDLL
 
     ## Loaded instance of the Windows dll kernel32
-    cdll.kernel32 = CDLL("Kernel32.dll", use_errno=True)
+    cdll.kernel32 = CDLL("Kernel32.dll", RTLD_LOCAL, None, True)
 
     ## Loaded instance of the Windows dll advapi32
-    cdll.advapi32 = CDLL("advapi32.dll", use_errno=True)
+    cdll.advapi32 = CDLL("advapi32.dll", RTLD_LOCAL, None, True)
 
     ## Loaded instance of the Windows dll version
-    cdll.version = CDLL("version.dll", use_errno=True)
+    cdll.version = CDLL("version.dll", RTLD_LOCAL, None, True)
 
 ## Type long for Python 2 compatibility
 try:
@@ -50,6 +50,9 @@ except NameError:
     # Fake it for Python 3
     long = int
 
+## Hack to allow Sphinx to not crash
+PROPERTY_HACK = property
+
 ########################################
 
 # Windows functions extracted from cdll
@@ -57,7 +60,9 @@ except NameError:
 ## WINBASEAPI DWORD WINAPI FormatMessageW(DWORD,LPCVOID,DWORD,DWORD,LPWSTR,
 #                                         DWORD, va_list*)
 FormatMessageW = cdll.kernel32.FormatMessageW
+## Returns DWORD
 FormatMessageW.restype = DWORD
+## Argument list for FormatMessageW()
 FormatMessageW.argtypes = [DWORD, LPCVOID, DWORD, DWORD, LPCVOID, DWORD,
                            c_void_p]
 
@@ -243,7 +248,7 @@ def winerror_to_string(winerror):
         None,
         c_ulong(winerror),
         # Use the user's default language
-        (LANG_NEUTRAL<<10) + SUBLANG_DEFAULT,
+        (LANG_NEUTRAL << 10) + SUBLANG_DEFAULT,
         byref(buf),
         # Size is not used
         0,
@@ -452,8 +457,8 @@ class PyHKEY(object):
         """
         return self.hkey
 
-    # The integer Win32 handle.
-    handle = property(_handle)
+    ## The integer Win32 handle. Actually ``property(_handle)``
+    handle = PROPERTY_HACK(_handle)
 
     def __enter__(self):
         """
@@ -515,7 +520,7 @@ class PyHKEY(object):
         """
         return "<PyHKEY:%08X>" % self.hkey
 
-    # Python sort description.
+    ## Python sort description.
     _as_parameter_ = property(lambda self: self.hkey)
 
     @staticmethod
@@ -639,15 +644,15 @@ def CreateKeyEx(key, sub_key, reserved=0, access=KEY_WRITE):
 
     result = HKEY()
     rc = RegCreateKeyExW(
-            PyHKEY.make(key),
-            sub_key,
-            reserved,
-            None,
-            0,
-            access,
-            None,
-            byref(result),
-            None)
+        PyHKEY.make(key),
+        sub_key,
+        reserved,
+        None,
+        0,
+        access,
+        None,
+        byref(result),
+        None)
     if rc != ERROR_SUCCESS:
         check_LRESULT(rc)
     return PyHKEY(result.value)
@@ -755,7 +760,7 @@ def EnumKey(key, index):
     tmpbuf = create_unicode_buffer(257)
     length = DWORD(sizeof(tmpbuf))
     rc = RegEnumKeyExW(PyHKEY.make(key), index, tmpbuf, byref(length),
-                          None, None, None, None)
+                       None, None, None, None)
     if rc != ERROR_SUCCESS:
         check_LRESULT(rc)
     return tmpbuf[:length.value]
@@ -957,11 +962,11 @@ def OpenKey(key, sub_key, reserved=0, access=KEY_READ):
 
     result = HKEY()
     rc = RegOpenKeyExW(
-            PyHKEY.make(key),
-            sub_key,
-            reserved,
-            access,
-            byref(result))
+        PyHKEY.make(key),
+        sub_key,
+        reserved,
+        access,
+        byref(result))
     if rc != ERROR_SUCCESS:
         check_LRESULT(rc)
     return PyHKEY.make(result.value)

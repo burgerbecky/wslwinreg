@@ -41,6 +41,7 @@ except NameError:
     # Fake it for Python 3
     basestring = str
 
+
 class Commands(IntEnum):
     """
     Commands to send to the bridging executable.
@@ -123,6 +124,7 @@ class Commands(IntEnum):
 
     ## Perform get_file_into()
     GET_FILE_INFO = 25
+
 
 ## Loopback address
 _LOCALHOST = "127.0.0.1"
@@ -444,7 +446,7 @@ class PyHKEY(object):
         """
         return self.hkey
 
-    # The integer Win32 handle.
+    ## The integer Win32 handle.
     handle = property(_handle)
 
     def __enter__(self):
@@ -507,7 +509,7 @@ class PyHKEY(object):
         """
         return "<PyHKEY:%08X>" % self.hkey
 
-    # Python sort description.
+    ## Python sort description.
     _as_parameter_ = property(lambda self: self.hkey)
 
     @staticmethod
