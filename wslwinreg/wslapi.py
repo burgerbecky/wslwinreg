@@ -14,6 +14,8 @@ Package that implements winreg for Windows Subsystem for Linux
 # pylint: disable=broad-except
 # pylint: disable=redefined-builtin
 # pylint: disable=raise-missing-from
+# pylint: disable=consider-using-f-string
+# pylint: disable=used-before-assignment
 
 import os
 import stat
@@ -21,7 +23,9 @@ import subprocess
 import socket
 import platform
 import struct
+import shutil
 from enum import IntEnum
+
 from .common import KEY_WRITE, KEY_WOW64_64KEY, KEY_READ, PY2, \
     winerror_to_errno, builtins, ERROR_FILE_NOT_FOUND, from_registry_bytes, \
     REG_SZ, to_registry_bytes
@@ -29,17 +33,242 @@ from .common import KEY_WRITE, KEY_WOW64_64KEY, KEY_READ, PY2, \
 
 ## Type long for Python 2 compatibility
 try:
-    long
+    long        # type: ignore
 except NameError:
     # Fake it for Python 3
     long = int
 
 ## Type basestring for Python 2 compatibility
 try:
-    basestring
+    basestring  # type: ignore
 except NameError:
     # Fake it for Python 3
     basestring = str
+
+## Loopback address
+_LOCALHOST = "127.0.0.1"
+
+## Transmission buffer size
+_BUFFER_SIZE = 1024
+
+## Directory for the windows executables
+_WIN_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bin")
+
+## Set the exe suffix for the CPU in use
+_EXESUFFIX = machine = platform.machine().lower()
+
+# Use a common suffix for amd64 instruction sets
+if _EXESUFFIX in ("amd64", "x86_64", "em64t"):
+    _EXESUFFIX = "x64"
+
+########################################
+
+
+def test_string(input_string):
+    """
+    Raise an exception if the input is not None or a string.
+
+    Args:
+        input_string: String to test.
+    Exception:
+        ``TypeError``
+    """
+
+    if input_string is None:
+        return
+
+    if not isinstance(input_string, basestring):
+        raise TypeError("{} has to be None or a string".format(input_string))
+
+########################################
+
+
+def convert_to_windows_path(path_name):
+    """
+    Convert a WSL path to windows if needed.
+
+    If the path is already Windows format, it will be returned unchanged.
+
+    Args:
+        path_name: Windows or Linux pathname
+    Return:
+        Pathname converted to Windows.
+    See Also:
+        convert_from_windows_path
+    """
+
+    # Network drive name?
+    if path_name.startswith("\\\\") or ":" in path_name:
+        return path_name
+
+    # The tool doesn't process ~ properly, help it by preprocessing here.
+    args = ("wslpath",
+        "-a",
+        "-w",
+        os.path.abspath(os.path.expanduser(path_name))
+            )
+
+    # Perform the conversion
+    tempfp = subprocess.Popen(args, stdout=subprocess.PIPE,
+                              stderr=None, universal_newlines=True)
+    # Get the string returned by cygpath
+    stdoutstr, _ = tempfp.communicate()
+
+    # Error? Fail
+    if tempfp.returncode:
+        return None
+    return stdoutstr.strip()
+
+########################################
+
+
+def convert_from_windows_path(path_name):
+    """
+    Convert an absolute Windows path to WSL.
+
+    If the path is already Linux format, it will be returned unchanged.
+
+    Args:
+        path_name: Absolute Windows pathname
+    Return:
+        Pathname converted to Linux.
+    See Also:
+        convert_to_windows_path
+    """
+
+    # Network drive name?
+    if path_name[0] in ("~", "/"):
+        return path_name
+
+    # Create command list
+    args = ("wslpath", "-a", "-u", path_name)
+
+    # Perform the conversion
+    tempfp = subprocess.Popen(args, stdout=subprocess.PIPE,
+                              stderr=None, universal_newlines=True)
+    # Get the string returned by cygpath
+    stdoutstr, _ = tempfp.communicate()
+
+    # Error? Fail
+    if tempfp.returncode:
+        return None
+    return stdoutstr.strip()
+
+########################################
+
+
+def find_windows_boot_drive():
+    """
+    Using the PATH, determine the boot drive
+
+    This function intentionally doesn't use the registry since
+    it's used to determine where the bridge exe file should be located.
+
+    Returns:
+        String of the boot drive path
+
+    """
+
+    # Get the WSL paths imported from Windows
+    paths = os.getenv("PATH")
+    if not paths:
+        # Assume default
+        return convert_from_windows_path("C:\\")
+
+    # Split the entries
+    path_entries = paths.split(":")
+
+    # Scan the paths for one of interest
+    for item in path_entries:
+
+        # /mnt/c/Windows is a path to test for
+        index = item.find("Windows")
+        if index != -1 and index >= 3:
+            # Is there a drive letter prefix?
+            if item[index - 1] == '/' and item[index - 3] == '/':
+                # Get the drive letter
+                drive = item[index - 2]
+                # Convert to wsl from a Windows path
+                return convert_from_windows_path(
+                    drive + ":\\")
+
+    return convert_from_windows_path("C:\\")
+
+
+########################################
+
+def get_windows_user():
+    """
+    Determine the name of the user logged into Windows
+
+    Don't use the registry
+
+    Returns:
+        Logged in user name
+    """
+
+    # Use the Windows application
+    args = ("whoami.exe",)
+
+    # Perform the conversion
+    tempfp = subprocess.Popen(args, stdout=subprocess.PIPE,
+                              stderr=None, universal_newlines=True)
+    # Get the string returned by cygpath
+    stdoutstr, _ = tempfp.communicate()
+
+    # Error? Fail
+    if tempfp.returncode:
+        return None
+
+    # Remove the system name
+    user_name = stdoutstr.strip()
+    return user_name.split("\\")[1]
+
+########################################
+
+
+def get_exe_path():
+    """
+    Determine where the bridge exe resides
+
+    Check if the exe is installed, and if not, install it.
+
+    This is done because launching an EXE file from the
+    Linux file system is slow. This corrects the issue
+
+    Returns:
+        Pathname of the bridge exe
+    """
+
+    # Since the registry is off limits here, use
+    # clever techniques to determine the logged in
+    # Windows user's home directory
+    boot = find_windows_boot_drive()
+    user = get_windows_user()
+
+    # Location where the exe should exist
+    user_path = os.path.join(boot, "Users", user, ".wslwinreg")
+
+    # Make sure the folder exists
+    if not os.path.isdir(user_path):
+        os.mkdir(user_path)
+
+    # Select the correct binary
+    bridge_name = "backend-" + _EXESUFFIX + ".exe"
+
+    # Where should it reside?
+    bridge_path = os.path.join(user_path, bridge_name)
+
+    # If it's not there, copy it
+    if not os.path.isfile(bridge_path):
+
+        origin_path = os.path.join(
+            _WIN_DIR, bridge_name)
+        # Copy the exe to windows space
+        shutil.copy(origin_path, bridge_path)
+    return bridge_path
+
+########################################
 
 
 class Commands(IntEnum):
@@ -126,32 +355,8 @@ class Commands(IntEnum):
     GET_FILE_INFO = 25
 
 
-## Loopback address
-_LOCALHOST = "127.0.0.1"
-
-## Transmission buffer size
-_BUFFER_SIZE = 1024
-
-## Directory for the windows executables
-_WIN_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bin")
-
-## Set the exe suffix for the CPU in use
-_EXESUFFIX = machine = platform.machine().lower()
-
-# Use a common suffix for amd64 instruction sets
-if _EXESUFFIX in ("amd64", "x86_64", "em64t"):
-    _EXESUFFIX = "x64"
-
 ## Patch to the executable to bridge
-_WIN_EXE = os.path.join(_WIN_DIR, "backend-" + _EXESUFFIX + ".exe")
-
-# Make sure it's executable
-
-## Saved stat for the backend server
-_STAT = os.stat(_WIN_EXE)
-if not _STAT.st_mode & stat.S_IEXEC:
-    os.chmod(_WIN_EXE, _STAT.st_mode | stat.S_IEXEC)
-del _STAT
+_WIN_EXE = get_exe_path()
 
 # Prepare a socket to be waiting for the exe once it is launched
 
@@ -533,24 +738,6 @@ class PyHKEY(object):
         # This didn't end well.
         raise TypeError("A handle must be a HKEY object or an integer")
 
-########################################
-
-
-def test_string(input_string):
-    """
-    Raise an exception if the input is not None or a string.
-
-    Args:
-        input_string: String to test.
-    Exception:
-        ``TypeError``
-    """
-
-    if input_string is None:
-        return
-
-    if not isinstance(input_string, basestring):
-        raise TypeError("{} has to be None or a string".format(input_string))
 
 ########################################
 
@@ -1347,79 +1534,6 @@ def QueryReflectionKey(key):
     return_code = struct.unpack("<B", data)[0]
     return return_code != 0
 
-########################################
-
-
-def convert_to_windows_path(path_name):
-    """
-    Convert a WSL path to windows if needed.
-
-    If the path is already Windows format, it will be returned unchanged.
-
-    Args:
-        path_name: Windows or Linux pathname
-    Return:
-        Pathname converted to Windows.
-    See Also:
-        convert_from_windows_path
-    """
-
-    # Network drive name?
-    if path_name.startswith("\\\\") or ":" in path_name:
-        return path_name
-
-    # The tool doesn't process ~ properly, help it by preprocessing here.
-    args = ("wslpath",
-        "-a",
-        "-w",
-        os.path.abspath(os.path.expanduser(path_name))
-            )
-
-    # Perform the conversion
-    tempfp = subprocess.Popen(args, stdout=subprocess.PIPE,
-                              stderr=None, universal_newlines=True)
-    # Get the string returned by cygpath
-    stdoutstr, _ = tempfp.communicate()
-
-    # Error? Fail
-    if tempfp.returncode:
-        return None
-    return stdoutstr.strip()
-
-########################################
-
-
-def convert_from_windows_path(path_name):
-    """
-    Convert an absolute Windows path to WSL.
-
-    If the path is already Linux format, it will be returned unchanged.
-
-    Args:
-        path_name: Absolute Windows pathname
-    Return:
-        Pathname converted to Linux.
-    See Also:
-        convert_to_windows_path
-    """
-
-    # Network drive name?
-    if path_name[0] in ("~", "/"):
-        return path_name
-
-    # Create command list
-    args = ("wslpath", "-a", "-u", path_name)
-
-    # Perform the conversion
-    tempfp = subprocess.Popen(args, stdout=subprocess.PIPE,
-                              stderr=None, universal_newlines=True)
-    # Get the string returned by cygpath
-    stdoutstr, _ = tempfp.communicate()
-
-    # Error? Fail
-    if tempfp.returncode:
-        return None
-    return stdoutstr.strip()
 
 ########################################
 
