@@ -14,7 +14,7 @@ import subprocess
 import os
 import sys
 import errno
-import sphinx_rtd_theme
+from burger import import_py_script
 
 # Determine if running on "ReadTheDocs.org"
 
@@ -56,7 +56,7 @@ extensions = [
     "sphinx.ext.ifconfig",
     "sphinx.ext.viewcode",
     "sphinx.ext.githubpages",
-    "sphinx.ext.imgconverter",
+    # "sphinx.ext.imgconverter",
     # rst2pdf has a conflict with sphinx.ext.mathjax
     # "rst2pdf.pdfbuilder",
     "breathe",
@@ -99,10 +99,6 @@ pygments_style = "sphinx"
 # a list of builtin themes.
 
 html_theme = "sphinx_rtd_theme"
-
-# Add any paths that contain custom themes here, relative to this directory.
-# html_theme_path = ["_themes",]
-html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further. For a list of options available for each theme, see the
@@ -243,41 +239,29 @@ def generate_doxygen_xml(app):
 
     # Doxygen can't create a nested folder. Help it by
     # creating the first folder
-
     try:
         os.makedirs(os.path.join(CWD, "temp"))
     except OSError as error:
         if error.errno != errno.EEXIST:
             raise
 
+    # If already generated, abort
+    if _ON_RTD and os.path.isfile(
+            os.path.join(CWD, "temp", "html", "index.html")):
+        print("Already generated Doxygen docs")
+        return
+
     # Invoke the prebuild python script to create the README.html
     # file if needed using pandoc
-    sys.path.append(CWD)
-    build_rules = __import__("build_rules")
-    sys.path.pop()
-    build_rules.build(CWD, "all")
-
-    # Read the docs has an old version of doxygen, upgrade it.
-    if _ON_RTD:
-        doxygen = os.path.join(CWD, "doxygen")
-        if not os.path.isfile(doxygen):
-            try:
-                subprocess.call(("curl -O "
-                    "http://logicware.com/downloads/linux/doxygen-1.12.0.tgz"),
-                    cwd=CWD,
-                    shell=True)
-                subprocess.call("tar -xvf doxygen-1.12.0.tgz", cwd=CWD,
-                    shell=True)
-            except OSError as error:
-                sys.stderr.write("doxygen download error: %s" % error)
-    else:
-        doxygen = "doxygen"
+    build_rules = import_py_script(
+        os.path.join(CWD, "build_rules.py"))
+    build_rules.build(CWD, None)
 
     # Call Doxygen to build the documentation
     try:
         # Log the Doxygen version number
-        subprocess.call(doxygen + " -v", cwd=CWD, shell=True)
-        retcode = subprocess.call(doxygen, cwd=CWD, shell=True)
+        subprocess.call("doxygen -v", cwd=CWD, shell=True)
+        retcode = subprocess.call("doxygen", cwd=CWD, shell=True)
         if retcode < 0:
             sys.stderr.write("doxygen terminated by signal %s" % (-retcode))
     except OSError as error:

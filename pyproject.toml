@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+dynamic = ["version"]
+name = "wslwinreg"
+authors = [
+    { name = "Rebecca Ann Heineman" },
+    { email = "becky@burgerbecky.com" },
+]
+description = "Drop in replacement for winreg for Cygwin, MSYS2 and WSL"
+license = "MIT"
+license-files = ["LICENSE.txt"]
+dependencies = ["setuptools >= 77.0.0", "enum34>=1.0.0"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Build Tools",
+    "Operating System :: OS Independent",
+    "Natural Language :: English",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 2",
+    "Programming Language :: Python :: 2.7",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.4",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+requires-python = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*"
+readme = "README.rst"
+keywords = [
+    "cygwin",
+    "msys2",
+    "wsl",
+    "wsl2",
+    "winreg",
+    "development",
+    "windows",
+    "visual studio",
+    "vs",
+    "burger"
+]
+
+[tool.setuptools.dynamic]
+version = { attr = "wslwinreg.__version__" }
+
+[project.urls]
+Homepage = "https://github.com/burgerbecky/wslwinreg"
+Documentation = "http://wslwinreg.readthedocs.io"
+Source = "https://github.com/burgerbecky/wslwinreg"
+
+[tool.setuptools.packages.find]
+include = ["wslwinreg"]
+exclude = ["unittests", "src"]
+namespaces = false
+
+[tool.setuptools.package-data]
+wslwinreg = ["bin/*.exe"]

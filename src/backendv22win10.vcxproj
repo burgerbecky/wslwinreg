@@ -60,34 +60,34 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>$(ProjectName)-x86</TargetName>
+    <TargetName>$(ProjectName)v22w32ltc</TargetName>
     <IntDir>$(ProjectDir)temp\$(ProjectName)v22w32ltc\</IntDir>
-    <OutDir>$(ProjectDir)..\wslwinreg\bin\</OutDir>
+    <OutDir>$(ProjectDir)bin\</OutDir>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>$(ProjectName)-x64</TargetName>
+    <TargetName>$(ProjectName)v22w64ltc</TargetName>
     <IntDir>$(ProjectDir)temp\$(ProjectName)v22w64ltc\</IntDir>
-    <OutDir>$(ProjectDir)..\wslwinreg\bin\</OutDir>
+    <OutDir>$(ProjectDir)bin\</OutDir>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|ARM'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>$(ProjectName)-arm</TargetName>
+    <TargetName>$(ProjectName)v22wina32ltc</TargetName>
     <IntDir>$(ProjectDir)temp\$(ProjectName)v22wina32ltc\</IntDir>
-    <OutDir>$(ProjectDir)..\wslwinreg\bin\</OutDir>
+    <OutDir>$(ProjectDir)bin\</OutDir>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|ARM64'">
     <LinkIncremental>false</LinkIncremental>
-    <TargetName>$(ProjectName)-arm64</TargetName>
+    <TargetName>$(ProjectName)v22wina64ltc</TargetName>
     <IntDir>$(ProjectDir)temp\$(ProjectName)v22wina64ltc\</IntDir>
-    <OutDir>$(ProjectDir)..\wslwinreg\bin\</OutDir>
+    <OutDir>$(ProjectDir)bin\</OutDir>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
   </PropertyGroup>
@@ -123,6 +123,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
+    <PostBuildEvent>
+      <Message>Copying $(TargetPath) to "$(ProjectDir)..\wslwinreg\bin\backend-x86.exe"</Message>
+      <Command>mkdir "$(ProjectDir)..\wslwinreg\bin" 2&gt;nul
+copy /Y "$(TargetPath)" "$(ProjectDir)..\wslwinreg\bin\backend-x86.exe"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|x64'">
     <ClCompile>
@@ -156,6 +162,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
+    <PostBuildEvent>
+      <Message>Copying $(TargetPath) to "$(ProjectDir)..\wslwinreg\bin\backend-x64.exe"</Message>
+      <Command>mkdir "$(ProjectDir)..\wslwinreg\bin" 2&gt;nul
+copy /Y "$(TargetPath)" "$(ProjectDir)..\wslwinreg\bin\backend-x64.exe"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|ARM'">
     <ClCompile>
@@ -189,6 +201,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
+    <PostBuildEvent>
+      <Message>Copying $(TargetPath) to "$(ProjectDir)..\wslwinreg\bin\backend-arm.exe"</Message>
+      <Command>mkdir "$(ProjectDir)..\wslwinreg\bin" 2&gt;nul
+copy /Y "$(TargetPath)" "$(ProjectDir)..\wslwinreg\bin\backend-arm.exe"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_LTCG|ARM64'">
     <ClCompile>
@@ -222,6 +240,12 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
+    <PostBuildEvent>
+      <Message>Copying $(TargetPath) to "$(ProjectDir)..\wslwinreg\bin\backend-arm64.exe"</Message>
+      <Command>mkdir "$(ProjectDir)..\wslwinreg\bin" 2&gt;nul
+copy /Y "$(TargetPath)" "$(ProjectDir)..\wslwinreg\bin\backend-arm64.exe"
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="wslbackend.cpp" />

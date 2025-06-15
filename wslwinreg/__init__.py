@@ -87,7 +87,7 @@ __email__ = "becky@burgerbecky.com"
 __license__ = "MIT License"
 
 ## Copyright owner
-__copyright__ = "Copyright 2020-2024 Rebecca Ann Heineman"
+__copyright__ = "Copyright 2020-2025 Rebecca Ann Heineman"
 
 # Load in the proper implementation based on the
 # underlying operating system
