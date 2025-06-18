@@ -37,7 +37,7 @@ BUILDME_DEPENDENCIES = "src/backendv22win10.sln"
 CLEANME_NO_RECURSE = False
 
 # ``cleanme`` will clean the listed folders before cleaning this folder.
-CLEANME_DEPENDENCIES = []
+CLEANME_DEPENDENCIES = ["src"]
 
 
 # Directories to clean
@@ -126,6 +126,9 @@ def clean(working_directory):
     for item in CLEAN_DIR_LIST:
         delete_directory(
             os.path.join(working_directory, item), delete_read_only=True)
+
+    # Get rid of extra binaries
+    delete_directory(os.path.join(working_directory, "wslwinreg", "bin"))
 
     clean_directories(
         working_directory,
