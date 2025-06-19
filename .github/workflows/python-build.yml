@@ -24,8 +24,10 @@ jobs:
           - "windows-2022-py312"
           - "windows-2022-py313"
           - "windows-2025-py313"
-          - "windows-2025-pypy27"
           - "windows-2025-pypy310"
+          # Disabled pypy27 since it crashes on Github, but
+          # it passes locally on Windows 10
+          # - "windows-2025-pypy27"
           # Specific data for each version being built
         include:
           # Windows 2022 Server

@@ -139,7 +139,8 @@ def clean(working_directory):
     clean_files(
         working_directory,
         name_list=CLEAN_EXTENSION_LIST,
-        recursive=True)
+        recursive=True,
+        delete_read_only=True)
 
     return 0
 
