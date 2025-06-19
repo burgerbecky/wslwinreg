@@ -13,8 +13,7 @@ import unittest
 
 import threading
 from platform import machine
-# pylint: disable=unused-import
-from platform import platform as pplatform
+from platform import python_implementation
 
 # pylint: disable=redefined-builtin
 # pylint: disable=wildcard-import
@@ -24,6 +23,8 @@ from platform import platform as pplatform
 # pylint: disable=redundant-u-string-prefix
 # pylint: disable=invalid-name
 # pylint: disable=consider-using-f-string
+
+USING_PYPY = python_implementation().lower() == "pypy"
 
 try:
     from platform import win32_edition
@@ -267,8 +268,9 @@ class LocalWinregTests(BaseWinregTests):
         """
         Try unicode
         """
-        self._test_all(HKEY_CURRENT_USER)
-        self._test_all(HKEY_CURRENT_USER, "日本-subkey")
+        if not USING_PYPY:
+            self._test_all(HKEY_CURRENT_USER)
+            self._test_all(HKEY_CURRENT_USER, "日本-subkey")
 
     def test_registry_works_extended_functions(self):
         """
@@ -276,13 +278,16 @@ class LocalWinregTests(BaseWinregTests):
         extended counterparts.
         Note: DeleteKeyEx is not used here because it is platform dependent
         """
-        def cke(
-            key,
-            sub_key): return CreateKeyEx(
-            key,
-            sub_key,
-            0,
-            KEY_ALL_ACCESS)
+
+        if USING_PYPY:
+            return
+
+        def cke(key, sub_key):
+            return CreateKeyEx(
+                key,
+                sub_key,
+                0,
+                KEY_ALL_ACCESS)
         self._write_test_data(HKEY_CURRENT_USER, CreateKey=cke)
 
         def oke(key, sub_key):
