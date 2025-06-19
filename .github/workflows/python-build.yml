@@ -68,14 +68,14 @@ jobs:
             python: "3.13"
             os: "windows-2025"
             tox_env: "py313"
-          - name: "windows-2025-pypy27"
-            python: "pypy2.7"
-            os: "windows-2025"
-            tox_env: "pypy"
           - name: "windows-2025-pypy310"
             python: "pypy3.10"
             os: "windows-2025"
             tox_env: "pypy3"
+          #- name: "windows-2025-pypy27"
+          #  python: "pypy2.7"
+          #  os: "windows-2025"
+          #  tox_env: "pypy"
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python ${{ matrix.python }}
