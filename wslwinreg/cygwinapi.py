@@ -12,6 +12,8 @@ Package that implements winreg for MSYS and Cygwin
 # pylint: disable=useless-object-inheritance
 # pylint: disable=unused-argument
 # pylint: disable=broad-except
+# pylint: disable=consider-using-f-string
+# pylint: disable=used-before-assignment
 
 from re import sub as re_sub
 import array
@@ -45,7 +47,7 @@ except OSError:
 
 ## Type long for Python 2 compatibility
 try:
-    long
+    long        # type: ignore
 except NameError:
     # Fake it for Python 3
     long = int
@@ -777,11 +779,13 @@ def EnumValue(key, index):
     It is typically called repeatedly, until an ``OSError`` exception is
     raised, indicating no more values.
 
-    | Index | Meaning |
-    | ----- | ------- |
-    | 0 | A string that identifies the value. |
-    | 1 | An object that holds the value data, and whose type depends on the underlying registry type |
-    | 2 | An integer that identifies the type of the value data |
+    <table>
+    <tr><th>Index<th>Meaning
+    <tr><td>0<td>A string that identifies the value.
+    <tr><td>1<td>An object that holds the value data,
+        and whose type depends on the underlying registry type
+    <tr><td>2<td>An integer that identifies the type of the value data
+    </table>
 
     Args:
         key: Is an already open key, or any one of the predefined
@@ -825,7 +829,7 @@ def EnumValue(key, index):
     typ = DWORD()
     while True:
         rc = RegEnumValueW(hkey, index, value_buf, byref(value_size), None,
-                          byref(typ), data_buf, byref(data_size))
+                           byref(typ), data_buf, byref(data_size))
         if rc != ERROR_MORE_DATA:
             break
         del data_buf
@@ -1004,11 +1008,13 @@ def QueryInfoKey(key):
     """
     Returns information about a key, as a tuple.
 
-    | Index | Meaning |
-    | ----- | ------- |
-    | 0 | An integer giving the number of sub keys this key has. |
-    | 1 | An integer giving the number of values this key has. |
-    | 2 | An integer giving when the key was last modified (if available) as 100’s of nanoseconds since Jan 1, 1601. |
+    <table>
+    <tr><th>Index<th>Meaning
+    <tr><td>0<td>An integer giving the number of sub keys this key has.
+    <tr><td>1<td>An integer giving the number of values this key has.
+    <tr><td>2<td>An integer giving when the key was last modified
+        (if available) as 100’s of nanoseconds since Jan 1, 1601.
+    </table>
 
     Args:
         key: Is an already open key, or any one of the predefined
@@ -1023,9 +1029,9 @@ def QueryInfoKey(key):
     num_values = DWORD()
     last_write_time = FILETIME()
     check_LRESULT(RegQueryInfoKeyW(PyHKEY.make(key), None, None, None,
-                             byref(num_sub_keys), None, None,
-                             byref(num_values), None, None, None,
-                             byref(last_write_time)))
+                                   byref(num_sub_keys), None, None,
+                                   byref(num_values), None, None, None,
+                                   byref(last_write_time)))
     last_write_time = (last_write_time.high << 32) | last_write_time.low
     return (num_sub_keys.value, num_values.value, last_write_time)
 
@@ -1115,7 +1121,7 @@ def QueryValueEx(key, value_name):
     typ = DWORD()
     while True:
         rc = RegQueryValueExW(hkey, value_name, None, byref(typ), buf,
-                             byref(buf_size))
+                              byref(buf_size))
         if rc != ERROR_MORE_DATA:
             break
         buffer_size = buffer_size * 2
@@ -1320,9 +1326,9 @@ def convert_to_windows_path(path_name):
 
     # The tool doesn't process ~ properly, help it by preprocessing here.
     args = ("cygpath",
-        "-a",
-        "-w",
-        os.path.abspath(os.path.expanduser(path_name))
+            "-a",
+            "-w",
+            os.path.abspath(os.path.expanduser(path_name))
             )
 
     # Perform the conversion

@@ -1,7 +1,9 @@
 ﻿#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Test the windows specific extra functions
+"""
+Test the windows specific extra functions
+"""
 
 import os
 import sys
@@ -13,6 +15,7 @@ import unittest
 # Insert the location of wslwinreg at the begining so it's the first
 # to be processed
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# pylint: disable=wrong-import-position
 from wslwinreg import convert_from_windows_path, convert_to_windows_path, \
     get_file_info, IS_CYGWIN, IS_MSYS, IS_WSL
 

@@ -33,10 +33,10 @@ Linux.
 #
 
 import itertools
-import os.path
 
 # pylint: disable=useless-object-inheritance
 # pylint: disable=invalid-name
+# pylint: disable=possibly-used-before-assignment
 
 from .common import IS_CYGWIN, IS_MSYS, IS_WSL, ERROR_SUCCESS, \
     ERROR_FILE_NOT_FOUND, ERROR_MORE_DATA, HKEY_CLASSES_ROOT, \
@@ -115,7 +115,7 @@ else:
     except ImportError:
         try:
             # Attempt importing the old name
-            from _winreg import *
+            from _winreg import *   # type: ignore
             from .cygwinapi import get_file_info
         except ImportError:
             # For unsupported platforms, create null apis that always

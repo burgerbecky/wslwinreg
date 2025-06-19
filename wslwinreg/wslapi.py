@@ -16,9 +16,9 @@ Package that implements winreg for Windows Subsystem for Linux
 # pylint: disable=raise-missing-from
 # pylint: disable=consider-using-f-string
 # pylint: disable=used-before-assignment
+# pylint: disable=consider-using-with
 
 import os
-import stat
 import subprocess
 import socket
 import platform
@@ -103,9 +103,9 @@ def convert_to_windows_path(path_name):
 
     # The tool doesn't process ~ properly, help it by preprocessing here.
     args = ("wslpath",
-        "-a",
-        "-w",
-        os.path.abspath(os.path.expanduser(path_name))
+            "-a",
+            "-w",
+            os.path.abspath(os.path.expanduser(path_name))
             )
 
     # Perform the conversion
@@ -997,11 +997,13 @@ def EnumValue(key, index):
     It is typically called repeatedly, until an ``OSError`` exception is
     raised, indicating no more values.
 
-    | Index | Meaning |
-    | ----- | ------- |
-    | 0 | A string that identifies the value. |
-    | 1 | An object that holds the value data, and whose type depends on the underlying registry type |
-    | 2 | An integer that identifies the type of the value data |
+    <table>
+    <tr><th>Index<th>Meaning
+    <tr><td>0<td>A string that identifies the value.
+    <tr><td>1<td>An object that holds the value data,
+        and whose type depends on the underlying registry type
+    <tr><td>2<td>An integer that identifies the type of the value data
+    </table>
 
     Args:
         key: Is an already open key, or any one of the predefined
@@ -1217,11 +1219,13 @@ def QueryInfoKey(key):
     """
     Returns information about a key, as a tuple.
 
-    | Index | Meaning |
-    | ----- | ------- |
-    | 0 | An integer giving the number of sub keys this key has. |
-    | 1 | An integer giving the number of values this key has. |
-    | 2 | An integer giving when the key was last modified (if available) as 100’s of nanoseconds since Jan 1, 1601. |
+    <table>
+    <tr><th>Index<th>Meaning
+    <tr><td>0<td>An integer giving the number of sub keys this key has.
+    <tr><td>1<td>An integer giving the number of values this key has.
+    <tr><td>2<td>An integer giving when the key was last modified
+        (if available) as 100’s of nanoseconds since Jan 1, 1601.
+    </table>
 
     Args:
         key: Is an already open key, or any one of the predefined

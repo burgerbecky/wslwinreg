@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Test the windows specific win32reg module.
-# Only win32reg functions not hit here: FlushKey, LoadKey and SaveKey
+"""
+    Test the windows specific win32reg module.
+    Only win32reg functions not hit here: FlushKey, LoadKey and SaveKey
+"""
 
 import os
 import sys
@@ -11,12 +13,25 @@ import unittest
 
 import threading
 from platform import machine
+# pylint: disable=unused-import
 from platform import platform as pplatform
+
+# pylint: disable=redefined-builtin
+# pylint: disable=wildcard-import
+# pylint: disable=unused-wildcard-import
+# pylint: disable=unused-variable
+# pylint: disable=redefined-outer-name
+# pylint: disable=redundant-u-string-prefix
+# pylint: disable=invalid-name
+# pylint: disable=consider-using-f-string
 
 try:
     from platform import win32_edition
 except ImportError:
     def win32_edition():
+        """
+        Fake function
+        """
         return "Not-Windows"
 
 # FileNotFoundError introduced in Python 3
@@ -31,6 +46,7 @@ else:
 # Insert the location of wslwinreg at the begining so it's the first
 # to be processed
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+# pylint: disable=wrong-import-position
 from wslwinreg import *
 
 # Do this first so test will be skipped if module doesn't exist
@@ -85,7 +101,11 @@ if sys.version_info >= (3, 7, 0):
     # Two and three kanjis, meaning: "Japan" and "Japanese")
     test_data.append(("Japanese 日本", "日本語", REG_SZ))
 
+
 class BaseWinregTests(unittest.TestCase):
+    """
+    Basic tests
+    """
 
     def setUp(self):
         # Make sure that the test key is absent when the test
@@ -93,6 +113,9 @@ class BaseWinregTests(unittest.TestCase):
         self.delete_tree(HKEY_CURRENT_USER, test_key_name)
 
     def delete_tree(self, root, subkey):
+        """
+        Delete a tree of keys
+        """
         try:
             hkey = OpenKey(root, subkey, 0, KEY_ALL_ACCESS)
         except OSError:
@@ -236,15 +259,23 @@ class BaseWinregTests(unittest.TestCase):
 
 
 class LocalWinregTests(BaseWinregTests):
+    """
+    Run tests only on local machine
+    """
 
     def test_registry_works(self):
+        """
+        Try unicode
+        """
         self._test_all(HKEY_CURRENT_USER)
         self._test_all(HKEY_CURRENT_USER, "日本-subkey")
 
     def test_registry_works_extended_functions(self):
-        # Substitute the regular CreateKey and OpenKey calls with their
-        # extended counterparts.
-        # Note: DeleteKeyEx is not used here because it is platform dependent
+        """
+        Substitute the regular CreateKey and OpenKey calls with their
+        extended counterparts.
+        Note: DeleteKeyEx is not used here because it is platform dependent
+        """
         def cke(
             key,
             sub_key): return CreateKeyEx(
@@ -254,41 +285,58 @@ class LocalWinregTests(BaseWinregTests):
             KEY_ALL_ACCESS)
         self._write_test_data(HKEY_CURRENT_USER, CreateKey=cke)
 
-        def oke(key, sub_key): return OpenKeyEx(key, sub_key, 0, KEY_READ)
+        def oke(key, sub_key):
+            return OpenKeyEx(key, sub_key, 0, KEY_READ)
         self._read_test_data(HKEY_CURRENT_USER, OpenKey=oke)
 
         self._delete_test_data(HKEY_CURRENT_USER)
 
     def test_named_arguments(self):
+        """
+        Test the named arguments
+        """
         self._test_named_args(HKEY_CURRENT_USER, test_key_name)
         # Use the regular DeleteKey to clean up
         # DeleteKeyEx takes named args and is tested separately
         DeleteKey(HKEY_CURRENT_USER, test_key_name)
 
     def test_connect_registry_to_local_machine_works(self):
-        # perform minimal ConnectRegistry test which just invokes it
+        """
+        perform minimal ConnectRegistry test which just invokes it
+        """
         h = ConnectRegistry(None, HKEY_LOCAL_MACHINE)
         self.assertNotEqual(h.handle, 0)
         h.Close()
         self.assertEqual(h.handle, 0)
 
     def test_nonexistent_remote_registry(self):
-        def connect(): return ConnectRegistry("abcdefghijkl", HKEY_CURRENT_USER)
+        """
+        See if this fails (It should)
+        """
+        def connect():
+            return ConnectRegistry("abcdefghijkl", HKEY_CURRENT_USER)
         self.assertRaises(OSError, connect)
 
     def testExpandEnvironmentStrings(self):
+        """
+        Do environment strings expand?
+        """
         r = ExpandEnvironmentStrings(u"%windir%\\test")
+        # pylint: disable=possibly-used-before-assignment
         self.assertEqual(type(r), unicode)
         try:
+            # pylint: disable=pointless-statement
             os.environ["windir"]
             self.assertEqual(r, os.environ["windir"] + "\\test")
         # If windir isn't present, try from the Windows environment
         except KeyError:
             self.assertEqual(r,
-                ExpandEnvironmentStrings(u"%windir%") + u"\\test")
+                             ExpandEnvironmentStrings(u"%windir%") + u"\\test")
 
     def test_context_manager(self):
-        # ensure that the handle is closed if an exception occurs
+        """
+        Ensure that the handle is closed if an exception occurs
+        """
         try:
             with ConnectRegistry(None, HKEY_LOCAL_MACHINE) as h:
                 self.assertNotEqual(h.handle, 0)
@@ -297,12 +345,18 @@ class LocalWinregTests(BaseWinregTests):
             self.assertEqual(h.handle, 0)
 
     def test_changing_value(self):
-        # Issue2810: A race condition in 2.6 and 3.1 may cause
-        # EnumValue or QueryValue to raise "WindowsError: More data is
-        # available"
+        """
+        Issue2810: A race condition in 2.6 and 3.1 may cause
+        EnumValue or QueryValue to raise "WindowsError: More data is
+        available"
+        """
         done = False
 
         class VeryActiveThread(threading.Thread):
+            """
+            Try to force a race condition
+            """
+
             def run(self):
                 with CreateKey(HKEY_CURRENT_USER, test_key_name) as key:
                     use_short = True
@@ -329,9 +383,11 @@ class LocalWinregTests(BaseWinregTests):
             DeleteKey(HKEY_CURRENT_USER, test_key_name)
 
     def test_long_key(self):
-        # Issue2810, in 2.6 and 3.1 when the key name was exactly 256
-        # characters, EnumKey raised "WindowsError: More data is
-        # available"
+        """
+        Issue2810, in 2.6 and 3.1 when the key name was exactly 256
+        characters, EnumKey raised "WindowsError: More data is
+        available"
+        """
         name = "x" * 256
         try:
             with CreateKey(HKEY_CURRENT_USER, test_key_name) as key:
@@ -343,8 +399,10 @@ class LocalWinregTests(BaseWinregTests):
             DeleteKey(HKEY_CURRENT_USER, test_key_name)
 
     def test_dynamic_key(self):
-        # Issue2810, when the value is dynamically generated, these
-        # raise "WindowsError: More data is available" in 2.6 and 3.1
+        """
+        Issue2810, when the value is dynamically generated, these
+        raise "WindowsError: More data is available" in 2.6 and 3.1
+        """
         try:
             EnumValue(HKEY_PERFORMANCE_DATA, 0)
         except OSError as e:
@@ -358,6 +416,9 @@ class LocalWinregTests(BaseWinregTests):
     # or DeleteKeyEx so make sure their use raises NotImplementedError
     @unittest.skipUnless(WIN_VER < (5, 2), "Requires Windows XP")
     def test_reflection_unsupported(self):
+        """
+        Test for XP on reflection
+        """
         try:
             with CreateKey(HKEY_CURRENT_USER, test_key_name) as ck:
                 self.assertNotEqual(ck.handle, 0)
@@ -377,10 +438,12 @@ class LocalWinregTests(BaseWinregTests):
             DeleteKey(HKEY_CURRENT_USER, test_key_name)
 
     def test_setvalueex_value_range(self):
-        # Test for Issue #14420, accept proper ranges for SetValueEx.
-        # Py2Reg, which gets called by SetValueEx, was using PyLong_AsLong,
-        # thus raising OverflowError. The implementation now uses
-        # PyLong_AsUnsignedLong to match DWORD's size.
+        """
+        Test for Issue #14420, accept proper ranges for SetValueEx.
+        Py2Reg, which gets called by SetValueEx, was using PyLong_AsLong,
+        thus raising OverflowError. The implementation now uses
+        PyLong_AsUnsignedLong to match DWORD's size.
+        """
         try:
             with CreateKey(HKEY_CURRENT_USER, test_key_name) as ck:
                 self.assertNotEqual(ck.handle, 0)
@@ -389,10 +452,12 @@ class LocalWinregTests(BaseWinregTests):
             DeleteKey(HKEY_CURRENT_USER, test_key_name)
 
     def test_queryvalueex_return_value(self):
-        # Test for Issue #16759, return unsigned int from QueryValueEx.
-        # Reg2Py, which gets called by QueryValueEx, was returning a value
-        # generated by PyLong_FromLong. The implementation now uses
-        # PyLong_FromUnsignedLong to match DWORD's size.
+        """
+        Test for Issue #16759, return unsigned int from QueryValueEx.
+        Reg2Py, which gets called by QueryValueEx, was returning a value
+        generated by PyLong_FromLong. The implementation now uses
+        PyLong_FromUnsignedLong to match DWORD's size.
+        """
         try:
             with CreateKey(HKEY_CURRENT_USER, test_key_name) as ck:
                 self.assertNotEqual(ck.handle, 0)
@@ -405,7 +470,9 @@ class LocalWinregTests(BaseWinregTests):
             DeleteKey(HKEY_CURRENT_USER, test_key_name)
 
     def test_setvalueex_crash_with_none_arg(self):
-        # Test for Issue #21151, segfault when None is passed to SetValueEx
+        """
+        Test for Issue #21151, segfault when None is passed to SetValueEx
+        """
         try:
             with CreateKey(HKEY_CURRENT_USER, test_key_name) as ck:
                 self.assertNotEqual(ck.handle, 0)
@@ -417,9 +484,12 @@ class LocalWinregTests(BaseWinregTests):
         finally:
             DeleteKey(HKEY_CURRENT_USER, test_key_name)
 
-    @unittest.skipUnless(STRING_WITH_NULL_WORKS, "Issue 25778 broken on this version")
+    @unittest.skipUnless(STRING_WITH_NULL_WORKS,
+                         "Issue 25778 broken on this version")
     def test_read_string_containing_null(self):
-        # Test for issue 25778: REG_SZ should not contain null characters
+        """
+        Test for issue 25778: REG_SZ should not contain null characters
+        """
         try:
             with CreateKey(HKEY_CURRENT_USER, test_key_name) as ck:
                 self.assertNotEqual(ck.handle, 0)
@@ -434,16 +504,28 @@ class LocalWinregTests(BaseWinregTests):
 
 @unittest.skipUnless(REMOTE_NAME, "Skipping remote registry tests")
 class RemoteWinregTests(BaseWinregTests):
+    """
+    Test keys on a remote machine
+    """
 
     def test_remote_registry_works(self):
+        """
+        Run all tests
+        """
         remote_key = ConnectRegistry(REMOTE_NAME, HKEY_CURRENT_USER)
         self._test_all(remote_key)
 
 
 @unittest.skipUnless(WIN64_MACHINE, "x64 specific registry tests")
 class Win64WinregTests(BaseWinregTests):
+    """
+    Check win64
+    """
 
     def test_named_arguments(self):
+        """
+        Test named keys
+        """
         self._test_named_args(HKEY_CURRENT_USER, test_key_name)
         # Clean up and also exercise the named arguments
         DeleteKeyEx(HKEY_CURRENT_USER, test_key_name,
@@ -452,8 +534,10 @@ class Win64WinregTests(BaseWinregTests):
     @unittest.skipIf(win32_edition() in ("WindowsCoreHeadless",
                      "IoTEdgeOS"), "APIs not available on WindowsCoreHeadless")
     def test_reflection_functions(self):
-        # Test that we can call the query, enable, and disable functions
-        # on a key which isn't on the reflection list with no consequences.
+        """
+        Test that we can call the query, enable, and disable functions
+        on a key which isn't on the reflection list with no consequences.
+        """
         with OpenKey(HKEY_LOCAL_MACHINE, "Software") as key:
             # HKLM\Software is redirected but not reflected in all OSes
             self.assertTrue(QueryReflectionKey(key))
@@ -463,10 +547,12 @@ class Win64WinregTests(BaseWinregTests):
 
     @unittest.skipUnless(HAS_REFLECTION, "OS doesn't support reflection")
     def test_reflection(self):
-        # Test that we can create, open, and delete keys in the 32-bit
-        # area. Because we are doing this in a key which gets reflected,
-        # test the differences of 32 and 64-bit keys before and after the
-        # reflection occurs (ie. when the created key is closed).
+        """
+        Test that we can create, open, and delete keys in the 32-bit
+        area. Because we are doing this in a key which gets reflected,
+        test the differences of 32 and 64-bit keys before and after the
+        reflection occurs (ie. when the created key is closed).
+        """
         try:
             with CreateKeyEx(HKEY_CURRENT_USER, test_reflect_key_name, 0,
                              KEY_ALL_ACCESS | KEY_WOW64_32KEY) as created_key:
@@ -482,9 +568,10 @@ class Win64WinregTests(BaseWinregTests):
 
                 # The key is not reflected until created_key is closed.
                 # The 64-bit version of the key should not be available yet.
-                def open_fail(): return OpenKey(HKEY_CURRENT_USER,
-                                            test_reflect_key_name, 0,
-                                            KEY_READ | KEY_WOW64_64KEY)
+                def open_fail():
+                    return OpenKey(HKEY_CURRENT_USER,
+                                   test_reflect_key_name, 0,
+                                   KEY_READ | KEY_WOW64_64KEY)
                 self.assertRaises(OSError, open_fail)
 
             # Now explicitly open the 64-bit version of the key
@@ -507,7 +594,9 @@ class Win64WinregTests(BaseWinregTests):
 
     @unittest.skipUnless(HAS_REFLECTION, "OS doesn't support reflection")
     def test_disable_reflection(self):
-        # Make use of a key which gets redirected and reflected
+        """
+        Make use of a key which gets redirected and reflected
+        """
         try:
             with CreateKeyEx(HKEY_CURRENT_USER, test_reflect_key_name, 0,
                              KEY_ALL_ACCESS | KEY_WOW64_32KEY) as created_key:
@@ -522,9 +611,10 @@ class Win64WinregTests(BaseWinregTests):
 
             # The key is now closed and would normally be reflected to the
             # 64-bit area, but let's make sure that didn't happen.
-            def open_fail(): return OpenKeyEx(HKEY_CURRENT_USER,
-                                          test_reflect_key_name, 0,
-                                          KEY_READ | KEY_WOW64_64KEY)
+            def open_fail():
+                return OpenKeyEx(HKEY_CURRENT_USER,
+                                 test_reflect_key_name, 0,
+                                 KEY_READ | KEY_WOW64_64KEY)
             self.assertRaises(OSError, open_fail)
 
             # Make sure the 32-bit key is actually there
@@ -536,8 +626,12 @@ class Win64WinregTests(BaseWinregTests):
                         KEY_WOW64_32KEY, 0)
 
     def test_exception_numbers(self):
-        with self.assertRaises(FileNotFoundError) as ctx:
+        """
+        Test if a query failed propery
+        """
+        with self.assertRaises(FileNotFoundError):
             QueryValue(HKEY_CLASSES_ROOT, "some_value_that_does_not_exist")
+
 
 if __name__ == "__main__":
     if not REMOTE_NAME:
