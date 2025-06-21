@@ -28,6 +28,22 @@ from burger import clean_directories, clean_files, run_command, \
     lock_files, unlock_files, delete_directory, create_setup_py, \
     delete_file
 
+# Buildme and Cleanme are invoked from another folder
+# so Python will pull in the version of wslwinreg that's
+# already installed. To force it to use the one in this
+# folder, manually purge it first, then insert the current
+# working directory into the search path, then reload
+# with the import call
+
+# Remove old copy of wslwinreg
+if "wslwinreg" in sys.modules:
+    del sys.modules["wslwinreg"]
+
+# Update the path
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+# Import this copy of wslwinreg
+# pylint: disable=wrong-import-position
 from wslwinreg import __version__
 
 # If set to True, ``buildme -r``` will not parse directories in this folder.
@@ -41,7 +57,6 @@ CLEANME_NO_RECURSE = False
 
 # ``cleanme`` will clean the listed folders before cleaning this folder.
 CLEANME_DEPENDENCIES = ["src"]
-
 
 # Directories to clean
 CLEAN_DIR_LIST = [
@@ -89,6 +104,7 @@ def build(working_directory, configuration):
         None if not implemented, otherwise an integer error code.
     """
 
+    # Create setup.py for Python 2.7 distribution
     input_file = os.path.join(working_directory, "pyproject.toml")
     output_file = os.path.join(working_directory, "setup.py")
     create_setup_py(input_file, output_file)
