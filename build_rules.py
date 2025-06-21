@@ -18,13 +18,16 @@ sphinx-build -M html . temp\build
 """
 
 # pylint: disable=unused-argument
+# pylint: disable=consider-using-f-string
 
 from __future__ import absolute_import, print_function, unicode_literals
 
 import os
 import sys
 from burger import clean_directories, clean_files, run_command, \
-    lock_files, unlock_files, delete_directory
+    lock_files, unlock_files, delete_directory, create_setup_py, \
+    delete_file
+
 from wslwinreg import __version__
 
 # If set to True, ``buildme -r``` will not parse directories in this folder.
@@ -86,6 +89,10 @@ def build(working_directory, configuration):
         None if not implemented, otherwise an integer error code.
     """
 
+    input_file = os.path.join(working_directory, "pyproject.toml")
+    output_file = os.path.join(working_directory, "setup.py")
+    create_setup_py(input_file, output_file)
+
     # Unlock the files to handle Perforce locking
     lock_list = unlock_files(working_directory) + \
         unlock_files(os.path.join(working_directory, "wslwinreg"))
@@ -129,6 +136,7 @@ def clean(working_directory):
 
     # Get rid of extra binaries
     delete_directory(os.path.join(working_directory, "wslwinreg", "bin"))
+    delete_file(os.path.join(working_directory, "setup.py"))
 
     clean_directories(
         working_directory,

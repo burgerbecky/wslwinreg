@@ -12,7 +12,7 @@ authors = [
 description = "Drop in replacement for winreg for Cygwin, MSYS2 and WSL"
 license = "MIT"
 license-files = ["LICENSE.txt"]
-dependencies = ["setuptools >= 77.0.0", "enum34>=1.0.0"]
+dependencies = ["setuptools >=44.0.0", "enum34>=1.0.0"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "Environment :: Console",
@@ -51,6 +51,10 @@ keywords = [
     "burger",
 ]
 
+[tool.setuptools]
+platforms = ["Any"]
+zip-safe = false
+
 [tool.setuptools.dynamic]
 version = { attr = "wslwinreg.__version__" }
 
@@ -60,9 +64,9 @@ Documentation = "http://wslwinreg.readthedocs.io"
 Source = "https://github.com/burgerbecky/wslwinreg"
 
 [tool.setuptools.packages.find]
-include = ["wslwinreg"]
+include = ["wslwinreg", "wslwinreg.bin"]
 exclude = ["unittests", "src"]
-namespaces = false
+namespaces = true
 
 [tool.setuptools.package-data]
 wslwinreg = ["bin/*.exe"]

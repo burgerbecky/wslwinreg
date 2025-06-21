@@ -24,6 +24,7 @@ from platform import python_implementation
 # pylint: disable=invalid-name
 # pylint: disable=consider-using-f-string
 
+# Some tests are unstable on pypy
 USING_PYPY = python_implementation().lower() == "pypy"
 
 try:
@@ -66,16 +67,16 @@ except AttributeError:
     WIN_VER = (10, 0)
 
 # Some tests should only run on 64-bit architectures where WOW64 will be.
-WIN64_MACHINE = True if machine() == "AMD64" or machine() == "x86_64" else False
+WIN64_MACHINE = bool(machine() == "AMD64" or machine() == "x86_64")
 
 # Starting with Windows 7 and Windows Server 2008 R2, WOW64 no longer uses
 # registry reflection and formerly reflected keys are shared instead.
 # Windows 7 and Windows Server 2008 R2 are version 6.1. Due to this, some
 # tests are only valid up until 6.1
-HAS_REFLECTION = True if WIN_VER < (6, 1) else False
+HAS_REFLECTION = bool(WIN_VER < (6, 1))
 
-STRING_WITH_NULL_WORKS = True if sys.version_info >= (3, 6, 0) or \
-    sys.version_info[0] == 2 else False
+STRING_WITH_NULL_WORKS = bool(sys.version_info >= (3, 6, 0) or \
+    sys.version_info[0] == 2)
 
 # Use a per-process key to prevent concurrent test runs (buildbot!) from
 # stomping on each other.
@@ -264,23 +265,21 @@ class LocalWinregTests(BaseWinregTests):
     Run tests only on local machine
     """
 
+    @unittest.skipIf(USING_PYPY, "Test doesn't work on PYPY")
     def test_registry_works(self):
         """
         Try unicode
         """
-        if not USING_PYPY:
-            self._test_all(HKEY_CURRENT_USER)
-            self._test_all(HKEY_CURRENT_USER, "日本-subkey")
+        self._test_all(HKEY_CURRENT_USER)
+        self._test_all(HKEY_CURRENT_USER, "日本-subkey")
 
+    @unittest.skipIf(USING_PYPY, "Test doesn't work on PYPY")
     def test_registry_works_extended_functions(self):
         """
         Substitute the regular CreateKey and OpenKey calls with their
         extended counterparts.
         Note: DeleteKeyEx is not used here because it is platform dependent
         """
-
-        if USING_PYPY:
-            return
 
         def cke(key, sub_key):
             return CreateKeyEx(
@@ -349,6 +348,7 @@ class LocalWinregTests(BaseWinregTests):
         except OSError:
             self.assertEqual(h.handle, 0)
 
+    @unittest.skipIf(USING_PYPY, "Test doesn't work on PYPY")
     def test_changing_value(self):
         """
         Issue2810: A race condition in 2.6 and 3.1 may cause
@@ -403,6 +403,7 @@ class LocalWinregTests(BaseWinregTests):
             DeleteKey(HKEY_CURRENT_USER, "\\".join((test_key_name, name)))
             DeleteKey(HKEY_CURRENT_USER, test_key_name)
 
+    @unittest.skipIf(USING_PYPY, "Test doesn't work on PYPY")
     def test_dynamic_key(self):
         """
         Issue2810, when the value is dynamically generated, these

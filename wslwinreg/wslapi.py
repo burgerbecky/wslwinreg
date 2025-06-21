@@ -45,6 +45,16 @@ except NameError:
     # Fake it for Python 3
     basestring = str
 
+try:
+    FileNotFoundError   # type: ignore
+except NameError:
+    class FileNotFoundError(OSError):
+        """
+        pypy2 does not define this exception
+        """
+        # pylint: disable=unnecessary-pass
+        pass
+
 ## Loopback address
 _LOCALHOST = "127.0.0.1"
 
