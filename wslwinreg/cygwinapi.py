@@ -33,7 +33,7 @@ from .common import PY2, builtins, ERROR_SUCCESS, ERROR_FILE_NOT_FOUND, \
 # Test kernel32 in case cdll is the broken version
 try:
     cdll.kernel32
-except OSError:
+except (OSError, AttributeError):
     from ctypes import CDLL
 
     ## Loaded instance of the Windows dll kernel32
