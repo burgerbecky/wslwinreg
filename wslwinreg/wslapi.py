@@ -218,7 +218,7 @@ def get_windows_user():
     """
 
     # Use the Windows application
-    args = ("whoami.exe",)
+    args = ("powershell.exe", "-Command", '[Console]::OutputEncoding = [System.Text.Encoding]::UTF8;$env:UserName')
 
     # Perform the conversion
     tempfp = subprocess.Popen(args, stdout=subprocess.PIPE,
@@ -232,7 +232,7 @@ def get_windows_user():
 
     # Remove the system name
     user_name = stdoutstr.strip()
-    return user_name.split("\\")[1]
+    return user_name
 
 ########################################
 
